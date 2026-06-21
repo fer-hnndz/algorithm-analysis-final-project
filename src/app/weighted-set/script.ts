@@ -1,0 +1,26 @@
+import type { Page } from "@/lib/paginate";
+
+export const script: Page[] = [
+  { text: "Después de escapar del consultorio del dentista..." },
+  { text: "La pandilla de la pecera flota en bolsas de plástico por el puerto." },
+  { text: "Lograron salir, pero ahora están atrapados en bolsas individuales." },
+  { text: "No saben cómo abrirlas. Solo pueden flotar y esperar." },
+  { text: "De repente, un niño llamado Mateo se acerca al muelle." },
+  { text: "Mateo acaba de armar una pecera nueva y quiere poblarla." },
+  { text: "Al ver todas las bolsas con peces, sus ojos se iluminan." },
+  { text: "Pero Mateo solo quiere ciertas especies específicas en su pecera." },
+  { text: "No le interesa cualquier pez, sino unos muy particulares." },
+  { text: "El problema es que hay muchísimas bolsas en el muelle..." },
+  { text: "...y cada bolsa contiene peces de una misma especie." },
+  { text: "Pero no todas las especies son igual de pacíficas." },
+  { text: "Cada especie tiene un nivel de agresividad distinto." },
+  { text: "Si Mateo junta especies muy agresivas, su pecera será un desastre." },
+  { text: "Mateo necesita elegir un grupo de bolsas..." },
+  { text: "...que entre todas cubran cada una de las especies que quiere." },
+  { text: "Pero quiere que el nivel total de agresividad sea lo más bajo posible." },
+  { text: "Cada bolsa representa un conjunto de peces con un costo..." },
+  { text: "...y ese costo es justamente su nivel de agresividad." },
+  { text: "Mateo debe encontrar la combinación perfecta de bolsas." },
+  { text: "Cubrir todas las especies que desea al menor costo total." },
+  { text: "¿Podrás ayudar a Mateo a elegir las bolsas correctas?" },
+];
