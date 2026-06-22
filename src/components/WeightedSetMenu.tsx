@@ -79,8 +79,18 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
 
   return (
     <div className="fixed inset-0 z-30 flex flex-col">
+      <div className="absolute inset-0 -z-10">
+        <Image
+          src="/weighted/nemo-ocean.jpg"
+          alt=""
+          fill
+          className="object-cover"
+          priority
+        />
+      </div>
+
       {/* Music bar */}
-      <div className="h-10 shrink-0 bg-black/95 flex items-center justify-end px-4 border-b border-white/10">
+      <div className="h-10 shrink-0 bg-black/75 flex items-center justify-end px-4 border-b border-white/10">
         <MusicPlayer
           audioPath={audioPath}
           playing={true}
@@ -88,9 +98,9 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
         />
       </div>
 
-      <div className="flex-1 flex min-h-0 bg-black/90">
+      <div className="flex-1 flex min-h-0 bg-black/55">
         {/* Left Sidebar */}
-        <div className="w-72 shrink-0 bg-black/80 border-r border-white/20 p-4 flex flex-col gap-4 overflow-y-auto">
+        <div className="w-72 shrink-0 bg-black/45 border-r border-white/20 p-4 flex flex-col gap-4 overflow-y-auto">
           <h2
             className="text-white text-xl text-center"
             style={{ fontFamily: '"Findet-Nemo"' }}
@@ -163,7 +173,7 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
         {/* Center */}
         <div className="flex-1 flex flex-col min-w-0">
           {/* Current Bag (1/3) */}
-          <div className="h-1/3 bg-black/60 border-b border-white/20 p-4 flex flex-col gap-3">
+          <div className="h-1/3 bg-black/35 border-b border-white/20 p-4 flex flex-col gap-3">
             <h2
               className="text-white text-lg text-center"
               style={{ fontFamily: '"Findet-Nemo"' }}
@@ -274,7 +284,7 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
         </div>
 
         {/* Right Sidebar */}
-        <div className="w-64 shrink-0 bg-black/80 border-l border-white/20 p-4 flex flex-col gap-4 overflow-y-auto">
+        <div className="w-64 shrink-0 bg-black/45 border-l border-white/20 p-4 flex flex-col gap-4 overflow-y-auto">
           <h2
             className="text-white text-xl text-center"
             style={{ fontFamily: '"Findet-Nemo"' }}
@@ -350,8 +360,8 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
 
       {/* Results Overlay */}
       {results !== null && (
-        <div className="absolute inset-0 bg-black/80 z-40 flex items-center justify-center">
-          <div className="bg-gray-900 border border-white/20 rounded-xl p-6 max-w-xl w-full max-h-[80vh] overflow-y-auto">
+        <div className="absolute inset-0 bg-black/60 z-40 flex items-center justify-center">
+          <div className="bg-gray-900/85 border border-white/20 rounded-xl p-6 max-w-xl w-full max-h-[80vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
               <h2
                 className="text-white text-2xl"
