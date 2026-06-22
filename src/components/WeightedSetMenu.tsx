@@ -97,7 +97,7 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
       </div>
 
       {/* Music bar */}
-      <div className="h-10 shrink-0 bg-black/75 flex items-center justify-end px-4 border-b border-white/10">
+      <div className="h-10 shrink-0 flex items-center justify-end m-2">
         <MusicPlayer
           audioPath={audioPath}
           playing={true}
@@ -180,9 +180,9 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
         {/* Center */}
         <div className="flex-1 flex flex-col min-w-0">
           {/* Current Bag (1/3) */}
-          <div className="h-1/3 bg-black/35 border-b border-white/20 p-4 flex flex-col gap-3">
+          <div className="h-1/3 p-4 flex flex-col  gap-3">
             <h2
-              className="text-white text-lg text-center"
+              className="text-white text-2xl text-shadow-lg text-center"
               style={{ fontFamily: '"Findet-Nemo"' }}
             >
               Bolsa Actual
@@ -191,7 +191,7 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
             <div className="flex-1 flex items-center justify-center gap-4 flex-wrap">
               {currentBag.length === 0 ? (
                 <p
-                  className="text-white/40 text-sm"
+                  className="text-white text-shadow-lg text"
                   style={{ fontFamily: '"Findet-Nemo"' }}
                 >
                   Agrega peces desde la izquierda
@@ -203,13 +203,23 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
                     onClick={() => removeFromBag(i)}
                     className="relative group flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-red-500/20 transition-colors"
                   >
-                    <Image
-                      src={item.fish.image}
-                      alt={item.fish.name}
-                      width={64}
-                      height={64}
-                      className="rounded-lg"
-                    />
+                    <div className="relative w-[100px] h-[100px]">
+                      <Image
+                        src="/weighted/bag.png"
+                        alt="bolsa"
+                        fill
+                        className="object-contain"
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <Image
+                          src={item.fish.image}
+                          alt={item.fish.name}
+                          width={48}
+                          height={48}
+                          className="rounded-lg"
+                        />
+                      </div>
+                    </div>
                     <span
                       className="text-white text-xs"
                       style={{ fontFamily: '"Findet-Nemo"' }}
@@ -237,10 +247,11 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
             </button>
           </div>
 
+          <hr className="border border-white" />
           {/* Mar (2/3) */}
           <div className="h-2/3 p-4 overflow-y-auto">
             <h2
-              className="text-white text-lg text-center mb-3"
+              className="text-white text-center mb-3 text-2xl text-shadow-lg"
               style={{ fontFamily: '"Findet-Nemo"' }}
             >
               Mar
@@ -248,7 +259,7 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
 
             {bags.length === 0 ? (
               <p
-                className="text-white/40 text-sm text-center mt-8"
+                className="text-sm text-center mt-8"
                 style={{ fontFamily: '"Findet-Nemo"' }}
               >
                 Las bolsas selladas apareceran aqui
@@ -260,21 +271,29 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
                     key={bag.id}
                     className="bg-white/10 border border-white/20 rounded-lg p-3 min-w-[200px]"
                   >
-                    <div className="flex flex-wrap gap-2 justify-center mb-2">
-                      {bag.fish.map((item, i) => (
-                        <div key={i} className="flex flex-col items-center">
-                          <Image
-                            src={item.fish.image}
-                            alt={item.fish.name}
-                            width={40}
-                            height={40}
-                            className="rounded"
-                          />
-                          <span className="text-white/70 text-[10px]">
-                            {item.aggressiveness}
-                          </span>
-                        </div>
-                      ))}
+                    <div className="relative w-full h-[100px] mb-2">
+                      <Image
+                        src="/weighted/bag.png"
+                        alt="bolsa"
+                        fill
+                        className="object-contain"
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center gap-1 flex-wrap">
+                        {bag.fish.map((item, i) => (
+                          <div key={i} className="flex flex-col items-center">
+                            <Image
+                              src={item.fish.image}
+                              alt={item.fish.name}
+                              width={36}
+                              height={36}
+                              className="rounded"
+                            />
+                            <span className="text-white/70 text-[10px]">
+                              {item.aggressiveness}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                     <p
                       className="text-white text-sm text-center"
@@ -423,21 +442,32 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
                       </div>
                       <div className="flex flex-wrap gap-3">
                         {resultBags.map((bag) => (
-                          <div key={bag.id} className="flex items-center gap-1">
-                            {bag.fish.map((item, j) => (
-                              <div key={j} className="relative">
-                                <Image
-                                  src={item.fish.image}
-                                  alt={item.fish.name}
-                                  width={36}
-                                  height={36}
-                                  className="rounded"
-                                />
-                                <span className="absolute -bottom-1 -right-1 bg-black/70 text-white text-[9px] rounded px-0.5">
-                                  {item.aggressiveness}
-                                </span>
-                              </div>
-                            ))}
+                          <div
+                            key={bag.id}
+                            className="relative w-[80px] h-[80px]"
+                          >
+                            <Image
+                              src="/weighted/bag.png"
+                              alt="bolsa"
+                              fill
+                              className="object-contain"
+                            />
+                            <div className="absolute inset-0 flex items-center justify-center gap-0.5 flex-wrap">
+                              {bag.fish.map((item, j) => (
+                                <div key={j} className="relative">
+                                  <Image
+                                    src={item.fish.image}
+                                    alt={item.fish.name}
+                                    width={28}
+                                    height={28}
+                                    className="rounded"
+                                  />
+                                  <span className="absolute -bottom-1 -right-1 bg-black/70 text-white text-[9px] rounded px-0.5">
+                                    {item.aggressiveness}
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
                           </div>
                         ))}
                       </div>
