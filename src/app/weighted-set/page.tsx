@@ -37,7 +37,7 @@ export default function WeightedSetPage() {
   return (
     <div className="flex justify-center items-center w-screen h-screen overflow-hidden bg-[#0a0a0a]">
       <div className="relative w-full h-full">
-        <div className={showMenu ? "hidden" : ""}>
+        <div className={showMenu ? "hidden" : "w-full h-full"}>
           <video
             ref={videoRef}
             src="/weighted/nemo-scene.mp4"

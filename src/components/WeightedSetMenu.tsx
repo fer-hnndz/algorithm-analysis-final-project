@@ -20,6 +20,14 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
   const [bags, setBags] = useState<Bag[]>([]);
   const [targetSpecies, setTargetSpecies] = useState<Set<string>>(new Set());
   const [results, setResults] = useState<CoverProposal[] | null>(null);
+  const [useSolver, setUseSolver] = useState<"custom" | "community">("custom");
+
+  function handleClearAll() {
+    setCurrentBag([]);
+    setBags([]);
+    setTargetSpecies(new Set());
+    setResults(null);
+  }
 
   function addToBag() {
     if (currentBag.length >= 3) return;
@@ -48,14 +56,21 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
 
   function handleCalculate() {
     if (bags.length === 0 || targetSpecies.size === 0) return;
-    setResults(null);
 
+    if (useSolver === "community") {
+      alert(
+        "Error: El solver aceptado por la comunidad no esta implementado aun.",
+      );
+      return;
+    }
+
+    setResults(null);
     const sets = bags.map((bag) =>
       toIdentifiedSet(
         bag.id,
         bag.fish.map((f) => f.fish.id),
-        bag.fish.reduce((sum, f) => sum + f.aggressiveness, 0)
-      )
+        bag.fish.reduce((sum, f) => sum + f.aggressiveness, 0),
+      ),
     );
 
     const computed = solveWeightedSetCover(sets, [...targetSpecies]);
@@ -66,7 +81,11 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
     <div className="fixed inset-0 z-30 flex flex-col">
       {/* Music bar */}
       <div className="h-10 shrink-0 bg-black/95 flex items-center justify-end px-4 border-b border-white/10">
-        <MusicPlayer audioPath={audioPath} playing={true} className="static top-auto right-auto" />
+        <MusicPlayer
+          audioPath={audioPath}
+          playing={true}
+          className="static top-auto right-auto"
+        />
       </div>
 
       <div className="flex-1 flex min-h-0 bg-black/90">
@@ -94,7 +113,11 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
               className="bg-white/10 text-white border border-white/30 rounded px-3 py-2 text-sm"
             >
               {allFish.map((f) => (
-                <option key={f.id} value={f.id} className="bg-gray-900 text-white">
+                <option
+                  key={f.id}
+                  value={f.id}
+                  className="bg-gray-900 text-white"
+                >
                   {f.name}
                 </option>
               ))}
@@ -124,7 +147,9 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
             className="mt-2 bg-white/20 text-white px-4 py-2 rounded-lg hover:bg-white/30 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
             style={{ fontFamily: '"Findet-Nemo"' }}
           >
-            {currentBag.length >= 3 ? "Bolsa llena (max 3)" : "Agregar a la bolsa"}
+            {currentBag.length >= 3
+              ? "Bolsa llena (max 3)"
+              : "Agregar a la bolsa"}
           </button>
 
           <p
@@ -288,6 +313,31 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
 
           <div className="flex-1" />
 
+          <label className="flex items-center gap-2 p-1 rounded hover:bg-white/5 cursor-pointer transition-colors">
+            <input
+              type="checkbox"
+              checked={useSolver === "community"}
+              onChange={(e) =>
+                setUseSolver(e.target.checked ? "community" : "custom")
+              }
+              className="accent-red-500 w-4 h-4"
+            />
+            <span
+              className="text-white/60 text-xs"
+              style={{ fontFamily: '"Findet-Nemo"' }}
+            >
+              Comunidad
+            </span>
+          </label>
+
+          <button
+            onClick={handleClearAll}
+            className="bg-white/10 text-white/70 px-3 py-1.5 rounded-lg hover:bg-white/20 transition-colors text-sm"
+            style={{ fontFamily: '"Findet-Nemo"' }}
+          >
+            Limpiar todo
+          </button>
+
           <button
             onClick={handleCalculate}
             className="bg-amber-600 text-white px-4 py-3 rounded-lg hover:bg-amber-500 transition-colors text-lg"
@@ -328,7 +378,9 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
             ) : (
               <div className="flex flex-col gap-3">
                 {results.slice(0, 10).map((result, i) => {
-                  const resultBags = bags.filter((b) => result.setIds.includes(b.id));
+                  const resultBags = bags.filter((b) =>
+                    result.setIds.includes(b.id),
+                  );
                   return (
                     <div
                       key={i}
