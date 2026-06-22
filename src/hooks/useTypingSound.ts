@@ -27,7 +27,12 @@ export function useTypingSound() {
   }, []);
 
   // Unlock the AudioContext on the first gesture anywhere on the page.
+  // Also check immediately in case it was already unlocked by a previous gesture.
   useEffect(() => {
+    if (Tone.getContext().state === "running") {
+      setReady(true);
+      return;
+    }
     const unlock = async () => {
       await Tone.start();
       setReady(true);

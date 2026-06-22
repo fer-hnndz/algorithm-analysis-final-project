@@ -5,9 +5,10 @@ import { useEffect, useRef, useState } from "react";
 interface MusicPlayerProps {
   audioPath: string;
   playing: boolean;
+  className?: string;
 }
 
-export default function MusicPlayer({ audioPath, playing }: MusicPlayerProps) {
+export default function MusicPlayer({ audioPath, playing, className = "" }: MusicPlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [showSlider, setShowSlider] = useState(false);
   const [volume, setVolume] = useState(0.35);
@@ -37,7 +38,7 @@ export default function MusicPlayer({ audioPath, playing }: MusicPlayerProps) {
   return (
     <>
       <audio ref={audioRef} src={audioPath} loop />
-      <div className="absolute top-4 right-4 flex items-center gap-2">
+      <div className={`absolute top-4 right-4 flex items-center gap-2 z-10 ${className}`}>
         {showSlider && (
           <input
             type="range"
