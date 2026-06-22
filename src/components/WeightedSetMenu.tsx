@@ -80,12 +80,19 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
   return (
     <div className="fixed inset-0 z-30 flex flex-col">
       <div className="absolute inset-0 -z-10">
-        <Image
+        {/* <Image
           src="/weighted/nemo-ocean.jpg"
           alt=""
           fill
           className="object-cover"
           priority
+        /> */}
+        <video
+          src="/weighted/nemo_ocean_video.mp4"
+          autoPlay
+          loop
+          muted
+          className="object-cover"
         />
       </div>
 
@@ -98,9 +105,9 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
         />
       </div>
 
-      <div className="flex-1 flex min-h-0 bg-black/55">
+      <div className="flex-1 flex min-h-0">
         {/* Left Sidebar */}
-        <div className="w-72 shrink-0 bg-black/45 border-r border-white/20 p-4 flex flex-col gap-4 overflow-y-auto">
+        <div className="w-72 shrink-0 bg-linear-90 from-cyan-800/90 to-cyan-950/90 p-4 flex flex-col gap-4 overflow-y-auto rounded-2xl border-2 border-cyan-300 shadow shadow-cyan-300 m-4">
           <h2
             className="text-white text-xl text-center"
             style={{ fontFamily: '"Findet-Nemo"' }}
@@ -231,7 +238,7 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
           </div>
 
           {/* Mar (2/3) */}
-          <div className="h-2/3 bg-blue-950/30 p-4 overflow-y-auto">
+          <div className="h-2/3 p-4 overflow-y-auto">
             <h2
               className="text-white text-lg text-center mb-3"
               style={{ fontFamily: '"Findet-Nemo"' }}
@@ -284,7 +291,7 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
         </div>
 
         {/* Right Sidebar */}
-        <div className="w-64 shrink-0 bg-black/45 border-l border-white/20 p-4 flex flex-col gap-4 overflow-y-auto">
+        <div className="w-64 shrink-0 border-l p-4 flex flex-col gap-4 overflow-y-hidden bg-linear-90 from-cyan-800 to-cyan-950 rounded-2xl border-2 border-cyan-300 shadow shadow-cyan-300 m-4">
           <h2
             className="text-white text-xl text-center"
             style={{ fontFamily: '"Findet-Nemo"' }}
