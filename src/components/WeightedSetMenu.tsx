@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import MusicPlayer from "@/components/MusicPlayer";
 import { allFish } from "@/app/weighted-set/fish-data";
 import { solveWeightedSetCover } from "@/lib/weighted-set-solver";
@@ -20,6 +21,7 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
   const [bags, setBags] = useState<Bag[]>([]);
   const [targetSpecies, setTargetSpecies] = useState<Set<string>>(new Set());
   const [results, setResults] = useState<CoverProposal[] | null>(null);
+  const [usedSolver, setUsedSolver] = useState<"custom" | "community">("custom");
   const [useSolver, setUseSolver] = useState<"custom" | "community">("custom");
 
   function handleClearAll() {
@@ -44,6 +46,28 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
     setCurrentBag([]);
   }
 
+  function generateRandomBags() {
+    const newBags: Bag[] = [];
+    for (let i = 0; i < 7; i++) {
+      const count = Math.floor(Math.random() * 3) + 1;
+      const fish: BagFish[] = [];
+      const usedIds = new Set<string>();
+      for (let j = 0; j < count; j++) {
+        let f: Fish;
+        do {
+          f = allFish[Math.floor(Math.random() * allFish.length)];
+        } while (usedIds.has(f.id));
+        usedIds.add(f.id);
+        fish.push({
+          fish: f,
+          aggressiveness: Math.floor(Math.random() * 10) + 1,
+        });
+      }
+      newBags.push({ id: Date.now() + i, fish });
+    }
+    setBags([...bags, ...newBags]);
+  }
+
   function toggleTarget(speciesId: string) {
     const next = new Set(targetSpecies);
     if (next.has(speciesId)) {
@@ -55,7 +79,14 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
   }
 
   function handleCalculate() {
-    if (bags.length === 0 || targetSpecies.size === 0) return;
+    if (targetSpecies.size === 0) {
+      alert("Selecciona al menos un pez en 'Quiero...' para calcular.");
+      return;
+    }
+    if (bags.length === 0) {
+      alert("Sella al menos una bolsa antes de calcular.");
+      return;
+    }
 
     if (useSolver === "community") {
       alert(
@@ -64,6 +95,7 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
       return;
     }
 
+    setUsedSolver(useSolver);
     setResults(null);
     const sets = bags.map((bag) =>
       toIdentifiedSet(
@@ -97,7 +129,14 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
       </div>
 
       {/* Music bar */}
-      <div className="h-10 shrink-0 flex items-center justify-end m-2">
+      <div className="h-10 shrink-0 flex items-center justify-between m-2">
+        <Link
+          href="/"
+          className="bg-white/10 text-white px-4 py-1.5 rounded-lg hover:bg-white/20 transition-colors text-sm"
+          style={{ fontFamily: '"Findet-Nemo"' }}
+        >
+          Atras
+        </Link>
         <MusicPlayer
           audioPath={audioPath}
           playing={true}
@@ -142,19 +181,24 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
           </div>
 
           <div className="flex flex-col gap-2">
-            <label
-              className="text-white/80 text-sm"
-              style={{ fontFamily: '"Findet-Nemo"' }}
-            >
-              Agresividad
-            </label>
+            <div className="flex items-center justify-between">
+              <label
+                className="text-white/80 text-sm"
+                style={{ fontFamily: '"Findet-Nemo"' }}
+              >
+                Agresividad
+              </label>
+              <span className="text-red-300 text-sm font-bold">
+                {aggressiveness}
+              </span>
+            </div>
             <input
-              type="number"
+              type="range"
               min={1}
               max={10}
               value={aggressiveness}
-              onChange={(e) => setAggressiveness(Number(e.target.value) || 1)}
-              className="bg-white/10 text-white border border-white/30 rounded px-3 py-2 text-sm"
+              onChange={(e) => setAggressiveness(Number(e.target.value))}
+              className="w-full h-2 bg-white/20 rounded-lg appearance-none cursor-pointer accent-red-400"
             />
           </div>
 
@@ -175,6 +219,14 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
           >
             {currentBag.length}/3 peces en bolsa
           </p>
+
+          <button
+            onClick={generateRandomBags}
+            className="bg-cyan-600/40 text-white/80 px-4 py-2 rounded-lg hover:bg-cyan-600/60 transition-colors text-sm border border-cyan-400/30"
+            style={{ fontFamily: '"Findet-Nemo"' }}
+          >
+            +7 bolsas random
+          </button>
         </div>
 
         {/* Center */}
@@ -203,22 +255,20 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
                     onClick={() => removeFromBag(i)}
                     className="relative group flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-red-500/20 transition-colors"
                   >
-                    <div className="relative w-[100px] h-[100px]">
+                    <div
+                      className="relative w-[100px] h-[100px] rounded-b-[40%] bg-white/15 border-2 border-white/25 shadow-[inset_0_0_20px_rgba(255,255,255,0.1)] flex items-center justify-center"
+                      style={{
+                        background:
+                          "radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.08) 40%, rgba(255,255,255,0.03) 100%)",
+                      }}
+                    >
                       <Image
-                        src="/weighted/bag.png"
-                        alt="bolsa"
-                        fill
-                        className="object-contain"
+                        src={item.fish.image}
+                        alt={item.fish.name}
+                        width={48}
+                        height={48}
+                        className="rounded-lg"
                       />
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <Image
-                          src={item.fish.image}
-                          alt={item.fish.name}
-                          width={48}
-                          height={48}
-                          className="rounded-lg"
-                        />
-                      </div>
                     </div>
                     <span
                       className="text-white text-xs"
@@ -271,29 +321,27 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
                     key={bag.id}
                     className="bg-white/10 border border-white/20 rounded-lg p-3 min-w-[200px]"
                   >
-                    <div className="relative w-full h-[100px] mb-2">
-                      <Image
-                        src="/weighted/bag.png"
-                        alt="bolsa"
-                        fill
-                        className="object-contain"
-                      />
-                      <div className="absolute inset-0 flex items-center justify-center gap-1 flex-wrap">
-                        {bag.fish.map((item, i) => (
-                          <div key={i} className="flex flex-col items-center">
-                            <Image
-                              src={item.fish.image}
-                              alt={item.fish.name}
-                              width={36}
-                              height={36}
-                              className="rounded"
-                            />
-                            <span className="text-white/70 text-[10px]">
-                              {item.aggressiveness}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
+                    <div
+                      className="relative w-full h-[100px] mb-2 rounded-b-[40%] bg-white/10 border-2 border-white/20 flex items-center justify-center gap-1 flex-wrap"
+                      style={{
+                        background:
+                          "radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.06) 40%, rgba(255,255,255,0.02) 100%)",
+                      }}
+                    >
+                      {bag.fish.map((item, i) => (
+                        <div key={i} className="flex flex-col items-center">
+                          <Image
+                            src={item.fish.image}
+                            alt={item.fish.name}
+                            width={36}
+                            height={36}
+                            className="rounded"
+                          />
+                          <span className="text-white/70 text-[10px]">
+                            {item.aggressiveness}
+                          </span>
+                        </div>
+                      ))}
                     </div>
                     <p
                       className="text-white text-sm text-center"
@@ -387,13 +435,13 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
       {/* Results Overlay */}
       {results !== null && (
         <div className="absolute inset-0 bg-black/60 z-40 flex items-center justify-center">
-          <div className="bg-gray-900/85 border border-white/20 rounded-xl p-6 max-w-xl w-full max-h-[80vh] overflow-y-auto">
+          <div className="bg-gray-900 border border-white/20 rounded-xl p-6 max-w-xl w-full max-h-[80vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
               <h2
                 className="text-white text-2xl"
                 style={{ fontFamily: '"Findet-Nemo"' }}
               >
-                Resultados
+                Resultados - {usedSolver === "custom" ? "Impl. Propia" : "Comunidad"}
               </h2>
               <button
                 onClick={() => setResults(null)}
@@ -444,30 +492,26 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
                         {resultBags.map((bag) => (
                           <div
                             key={bag.id}
-                            className="relative w-[80px] h-[80px]"
+                            className="relative w-[80px] h-[80px] rounded-b-[35%] bg-white/10 border-2 border-white/20 flex items-center justify-center gap-0.5 flex-wrap"
+                            style={{
+                              background:
+                                "radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.08) 40%, rgba(255,255,255,0.03) 100%)",
+                            }}
                           >
-                            <Image
-                              src="/weighted/bag.png"
-                              alt="bolsa"
-                              fill
-                              className="object-contain"
-                            />
-                            <div className="absolute inset-0 flex items-center justify-center gap-0.5 flex-wrap">
-                              {bag.fish.map((item, j) => (
-                                <div key={j} className="relative">
-                                  <Image
-                                    src={item.fish.image}
-                                    alt={item.fish.name}
-                                    width={28}
-                                    height={28}
-                                    className="rounded"
-                                  />
-                                  <span className="absolute -bottom-1 -right-1 bg-black/70 text-white text-[9px] rounded px-0.5">
-                                    {item.aggressiveness}
-                                  </span>
-                                </div>
-                              ))}
-                            </div>
+                            {bag.fish.map((item, j) => (
+                              <div key={j} className="relative">
+                                <Image
+                                  src={item.fish.image}
+                                  alt={item.fish.name}
+                                  width={28}
+                                  height={28}
+                                  className="rounded"
+                                />
+                                <span className="absolute -bottom-1 -right-1 bg-black/70 text-white text-[9px] rounded px-0.5">
+                                  {item.aggressiveness}
+                                </span>
+                              </div>
+                            ))}
                           </div>
                         ))}
                       </div>
