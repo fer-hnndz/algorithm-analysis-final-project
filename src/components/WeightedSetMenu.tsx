@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import MusicPlayer from "@/components/MusicPlayer";
 import { allFish } from "@/app/weighted-set/fish-data";
 import { solveWeightedSetCover } from "@/lib/weighted-set-solver";
+import { communitySolveWeightedSetCover } from "@/lib/weighted-set-community";
 import { toIdentifiedSet } from "@/lib/weighted-set-types";
 import type { CoverProposal } from "@/lib/weighted-set-types";
 import type { Fish, BagFish, Bag } from "@/app/weighted-set/types";
@@ -23,6 +24,7 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
   const [results, setResults] = useState<CoverProposal[] | null>(null);
   const [usedSolver, setUsedSolver] = useState<"custom" | "community">("custom");
   const [useSolver, setUseSolver] = useState<"custom" | "community">("custom");
+  const bagCounter = useRef(1);
 
   function handleClearAll() {
     setCurrentBag([]);
@@ -42,7 +44,7 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
 
   function sealBag() {
     if (currentBag.length === 0) return;
-    setBags([...bags, { id: Date.now(), fish: [...currentBag] }]);
+    setBags([...bags, { id: bagCounter.current++, fish: [...currentBag] }]);
     setCurrentBag([]);
   }
 
@@ -63,7 +65,7 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
           aggressiveness: Math.floor(Math.random() * 10) + 1,
         });
       }
-      newBags.push({ id: Date.now() + i, fish });
+      newBags.push({ id: bagCounter.current++, fish });
     }
     setBags([...bags, ...newBags]);
   }
@@ -88,13 +90,6 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
       return;
     }
 
-    if (useSolver === "community") {
-      alert(
-        "Error: El solver aceptado por la comunidad no esta implementado aun.",
-      );
-      return;
-    }
-
     setUsedSolver(useSolver);
     setResults(null);
     const sets = bags.map((bag) =>
@@ -105,7 +100,10 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
       ),
     );
 
-    const computed = solveWeightedSetCover(sets, [...targetSpecies]);
+    const computed =
+      useSolver === "community"
+        ? communitySolveWeightedSetCover(sets, [...targetSpecies])
+        : solveWeightedSetCover(sets, [...targetSpecies]);
     setResults(computed);
   }
 
@@ -321,6 +319,12 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
                     key={bag.id}
                     className="bg-white/10 border border-white/20 rounded-lg p-3 min-w-[200px]"
                   >
+                    <span
+                      className="text-white/60 text-xs mb-1 block"
+                      style={{ fontFamily: '"Findet-Nemo"' }}
+                    >
+                      Bolsa #{bag.id}
+                    </span>
                     <div
                       className="relative w-full h-[100px] mb-2 rounded-b-[40%] bg-white/10 border-2 border-white/20 flex items-center justify-center gap-1 flex-wrap"
                       style={{
@@ -490,15 +494,21 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
                       </div>
                       <div className="flex flex-wrap gap-3">
                         {resultBags.map((bag) => (
-                          <div
-                            key={bag.id}
-                            className="relative w-[80px] h-[80px] rounded-b-[35%] bg-white/10 border-2 border-white/20 flex items-center justify-center gap-0.5 flex-wrap"
-                            style={{
-                              background:
-                                "radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.08) 40%, rgba(255,255,255,0.03) 100%)",
-                            }}
-                          >
-                            {bag.fish.map((item, j) => (
+                          <div key={bag.id} className="flex flex-col items-center gap-0.5">
+                            <span
+                              className="text-white/50 text-[10px]"
+                              style={{ fontFamily: '"Findet-Nemo"' }}
+                            >
+                              #{bag.id}
+                            </span>
+                            <div
+                              className="relative w-[80px] h-[80px] rounded-b-[35%] bg-white/10 border-2 border-white/20 flex items-center justify-center gap-0.5 flex-wrap"
+                              style={{
+                                background:
+                                  "radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.08) 40%, rgba(255,255,255,0.03) 100%)",
+                              }}
+                            >
+                              {bag.fish.map((item, j) => (
                               <div key={j} className="relative">
                                 <Image
                                   src={item.fish.image}
@@ -513,6 +523,7 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
                               </div>
                             ))}
                           </div>
+                        </div>
                         ))}
                       </div>
                     </div>
