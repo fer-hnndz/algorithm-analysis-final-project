@@ -4,20 +4,30 @@ const MAX_PRIORITY = 999999;
 
 class PriorityQueue {
   private items: { id: number; priority: number }[] = [];
+  // Guarda la prioridad "vigente" de cada id
+  private validPriority = new Map<number, number>();
 
   addtask(id: number, priority: number) {
+    this.validPriority.set(id, priority);
     this.items.push({ id, priority });
   }
 
-  poptask(): number {
-    let minIdx = 0;
-    for (let i = 1; i < this.items.length; i++) {
-      if (this.items[i].priority < this.items[minIdx].priority) {
-        minIdx = i;
+  poptask(): number | null {
+    while (this.items.length > 0) {
+      // Saca el item con menor prioridad
+      let minIdx = 0;
+      for (let i = 1; i < this.items.length; i++) {
+        if (this.items[i].priority < this.items[minIdx].priority) {
+          minIdx = i;
+        }
+      }
+      const [item] = this.items.splice(minIdx, 1);
+
+      if (this.validPriority.get(item.id) === item.priority) {
+        return item.id;
       }
     }
-    const [item] = this.items.splice(minIdx, 1);
-    return item.id;
+    return null;
   }
 }
 
@@ -42,7 +52,7 @@ class PriorityQueue {
  */
 export function communitySolveWeightedSetCover(
   sets: IdentifiedSet<string>[],
-  targetElements: string[]
+  targetElements: string[],
 ): CoverProposal[] {
   if (targetElements.length === 0) return [];
 
@@ -90,6 +100,8 @@ export function communitySolveWeightedSetCover(
 
   while (coveredCount < targetElements.length) {
     const a = pq.poptask();
+    if (a === null) return [];
+
     selected.push(ids[a]);
     cost += w[a];
     coveredCount += scopy[a].size;
