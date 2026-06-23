@@ -23,7 +23,9 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
   const [bags, setBags] = useState<Bag[]>([]);
   const [targetSpecies, setTargetSpecies] = useState<Set<string>>(new Set());
   const [results, setResults] = useState<CoverProposal[] | null>(null);
-  const [usedSolver, setUsedSolver] = useState<"custom" | "community">("custom");
+  const [usedSolver, setUsedSolver] = useState<"custom" | "community">(
+    "custom",
+  );
   const [useSolver, setUseSolver] = useState<"custom" | "community">("custom");
   const bagCounter = useRef(1);
   const [showIntro, setShowIntro] = useState(true);
@@ -366,7 +368,7 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
         </div>
 
         {/* Right Sidebar */}
-        <div className="w-64 shrink-0 border-l p-4 flex flex-col gap-4 overflow-y-hidden bg-linear-90 from-cyan-800 to-cyan-950 rounded-2xl border-2 border-cyan-300 shadow shadow-cyan-300 m-4">
+        <div className="w-64 shrink-0 border-l p-4 flex flex-col gap-4 overflow-y-scroll bg-linear-90 from-cyan-800 to-cyan-950 rounded-2xl border-2 border-cyan-300 shadow shadow-cyan-300 m-4">
           <h2
             className="text-white text-2xl text-center antialiased"
             style={{ fontFamily: '"Findet-Nemo"' }}
@@ -374,7 +376,7 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
             Quiero...
           </h2>
 
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-1">
             {allFish.map((f) => (
               <label
                 key={f.id}
@@ -449,7 +451,8 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
                 className="text-white text-3xl antialiased"
                 style={{ fontFamily: '"Findet-Nemo"' }}
               >
-                Resultados - {usedSolver === "custom" ? "Impl. Propia" : "Comunidad"}
+                Resultados -{" "}
+                {usedSolver === "custom" ? "Impl. Propia" : "Comunidad"}
               </h2>
               <button
                 onClick={() => setResults(null)}
@@ -498,7 +501,10 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
                       </div>
                       <div className="flex flex-wrap gap-3">
                         {resultBags.map((bag) => (
-                          <div key={bag.id} className="flex flex-col items-center gap-0.5">
+                          <div
+                            key={bag.id}
+                            className="flex flex-col items-center gap-0.5"
+                          >
                             <span
                               className="text-white/50 text-xs antialiased"
                               style={{ fontFamily: '"Findet-Nemo"' }}
@@ -513,21 +519,21 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
                               }}
                             >
                               {bag.fish.map((item, j) => (
-                              <div key={j} className="relative">
-                                <Image
-                                  src={item.fish.image}
-                                  alt={item.fish.name}
-                                  width={32}
-                                  height={32}
-                                  className="rounded"
-                                />
-                                <span className="absolute -bottom-1 -right-1 bg-black/70 text-white text-[10px] rounded px-0.5">
-                                  {item.aggressiveness}
-                                </span>
-                              </div>
-                            ))}
+                                <div key={j} className="relative">
+                                  <Image
+                                    src={item.fish.image}
+                                    alt={item.fish.name}
+                                    width={32}
+                                    height={32}
+                                    className="rounded"
+                                  />
+                                  <span className="absolute -bottom-1 -right-1 bg-black/70 text-white text-[10px] rounded px-0.5">
+                                    {item.aggressiveness}
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
                           </div>
-                        </div>
                         ))}
                       </div>
                     </div>
@@ -567,9 +573,7 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
               </button>
             </div>
 
-            <p
-              className="text-white/90 text-xl leading-relaxed flex-1 antialiased"
-            >
+            <p className="text-white/90 text-xl leading-relaxed flex-1 antialiased">
               {script[introPage].text}
             </p>
 
@@ -582,9 +586,7 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
                 Atras
               </button>
 
-              <span
-                className="text-white/40 text-base"
-              >
+              <span className="text-white/40 text-base">
                 {introPage + 1} / {script.length}
               </span>
 
