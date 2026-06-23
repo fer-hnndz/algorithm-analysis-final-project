@@ -31,6 +31,7 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
     setBags([]);
     setTargetSpecies(new Set());
     setResults(null);
+    bagCounter.current = 1;
   }
 
   function addToBag() {
