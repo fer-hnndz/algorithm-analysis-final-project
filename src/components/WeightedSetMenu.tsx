@@ -130,7 +130,7 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
       <div className="h-10 shrink-0 flex items-center justify-between m-2">
         <Link
           href="/"
-          className="bg-white/10 text-white px-4 py-1.5 rounded-lg hover:bg-white/20 transition-colors text-sm"
+          className="bg-white/10 text-white px-4 py-1.5 rounded-lg hover:bg-white/20 transition-colors text-base antialiased"
           style={{ fontFamily: '"Findet-Nemo"' }}
         >
           Atras
@@ -146,7 +146,7 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
         {/* Left Sidebar */}
         <div className="w-72 shrink-0 bg-linear-90 from-cyan-800/90 to-cyan-950/90 p-4 flex flex-col gap-4 overflow-y-auto rounded-2xl border-2 border-cyan-300 shadow shadow-cyan-300 m-4">
           <h2
-            className="text-white text-xl text-center"
+            className="text-white text-2xl text-center antialiased"
             style={{ fontFamily: '"Findet-Nemo"' }}
           >
             Agregar Pez
@@ -154,7 +154,7 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
 
           <div className="flex flex-col gap-2">
             <label
-              className="text-white/80 text-sm"
+              className="text-white/80 text-base antialiased"
               style={{ fontFamily: '"Findet-Nemo"' }}
             >
               Especie
@@ -164,7 +164,7 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
               onChange={(e) =>
                 setSelectedFish(allFish.find((f) => f.id === e.target.value)!)
               }
-              className="bg-white/10 text-white border border-white/30 rounded px-3 py-2 text-sm"
+              className="bg-white/10 text-white border border-white/30 rounded px-3 py-2 text-base antialiased"
             >
               {allFish.map((f) => (
                 <option
@@ -181,12 +181,12 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
           <div className="flex flex-col gap-2">
             <div className="flex items-center justify-between">
               <label
-                className="text-white/80 text-sm"
+                className="text-white/80 text-base antialiased"
                 style={{ fontFamily: '"Findet-Nemo"' }}
               >
                 Agresividad
               </label>
-              <span className="text-red-300 text-sm font-bold">
+              <span className="text-red-300 text-lg font-bold">
                 {aggressiveness}
               </span>
             </div>
@@ -203,7 +203,7 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
           <button
             onClick={addToBag}
             disabled={currentBag.length >= 3}
-            className="mt-2 bg-white/20 text-white px-4 py-2 rounded-lg hover:bg-white/30 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            className="mt-2 bg-white/20 text-white px-4 py-2 rounded-lg hover:bg-white/30 transition-colors disabled:opacity-40 disabled:cursor-not-allowed text-lg antialiased"
             style={{ fontFamily: '"Findet-Nemo"' }}
           >
             {currentBag.length >= 3
@@ -212,7 +212,7 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
           </button>
 
           <p
-            className="text-white/60 text-sm text-center"
+            className="text-white/60 text-base text-center antialiased"
             style={{ fontFamily: '"Findet-Nemo"' }}
           >
             {currentBag.length}/3 peces en bolsa
@@ -220,7 +220,7 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
 
           <button
             onClick={generateRandomBags}
-            className="bg-cyan-600/40 text-white/80 px-4 py-2 rounded-lg hover:bg-cyan-600/60 transition-colors text-sm border border-cyan-400/30"
+            className="bg-cyan-600/40 text-white/80 px-4 py-2 rounded-lg hover:bg-cyan-600/60 transition-colors text-base antialiased border border-cyan-400/30"
             style={{ fontFamily: '"Findet-Nemo"' }}
           >
             +7 bolsas random
@@ -232,7 +232,7 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
           {/* Current Bag (1/3) */}
           <div className="h-1/3 p-4 flex flex-col  gap-3">
             <h2
-              className="text-white text-2xl text-shadow-lg text-center"
+              className="text-white text-3xl text-shadow-lg text-center antialiased"
               style={{ fontFamily: '"Findet-Nemo"' }}
             >
               Bolsa Actual
@@ -241,7 +241,7 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
             <div className="flex-1 flex items-center justify-center gap-4 flex-wrap">
               {currentBag.length === 0 ? (
                 <p
-                  className="text-white text-shadow-lg text"
+                  className="text-white text-shadow-lg text-lg antialiased"
                   style={{ fontFamily: '"Findet-Nemo"' }}
                 >
                   Agrega peces desde la izquierda
@@ -254,7 +254,7 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
                     className="relative group flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-red-500/20 transition-colors"
                   >
                     <div
-                      className="relative w-[100px] h-[100px] rounded-b-[40%] bg-white/15 border-2 border-white/25 shadow-[inset_0_0_20px_rgba(255,255,255,0.1)] flex items-center justify-center"
+                      className="relative w-[130px] h-[130px] rounded-b-[40%] bg-white/15 border-2 border-white/25 shadow-[inset_0_0_20px_rgba(255,255,255,0.1)] flex items-center justify-center"
                       style={{
                         background:
                           "radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.08) 40%, rgba(255,255,255,0.03) 100%)",
@@ -263,18 +263,18 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
                       <Image
                         src={item.fish.image}
                         alt={item.fish.name}
-                        width={48}
-                        height={48}
+                        width={64}
+                        height={64}
                         className="rounded-lg"
                       />
                     </div>
                     <span
-                      className="text-white text-xs"
+                      className="text-white text-base antialiased"
                       style={{ fontFamily: '"Findet-Nemo"' }}
                     >
                       {item.fish.name}
                     </span>
-                    <span className="text-red-300 text-xs">
+                    <span className="text-red-300 text-sm">
                       {item.aggressiveness}
                     </span>
                     <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
@@ -288,7 +288,7 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
             <button
               onClick={sealBag}
               disabled={currentBag.length === 0}
-              className="self-center bg-amber-700/60 text-white px-6 py-2 rounded-lg hover:bg-amber-700/80 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              className="self-center bg-amber-700/60 text-white px-6 py-2 rounded-lg hover:bg-amber-700/80 transition-colors disabled:opacity-40 disabled:cursor-not-allowed text-lg antialiased"
               style={{ fontFamily: '"Findet-Nemo"' }}
             >
               Sellar y tirar al mar
@@ -299,7 +299,7 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
           {/* Mar (2/3) */}
           <div className="h-2/3 p-4 overflow-y-auto">
             <h2
-              className="text-white text-center mb-3 text-2xl text-shadow-lg"
+              className="text-white text-center mb-3 text-3xl text-shadow-lg antialiased"
               style={{ fontFamily: '"Findet-Nemo"' }}
             >
               Mar
@@ -307,7 +307,7 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
 
             {bags.length === 0 ? (
               <p
-                className="text-sm text-center mt-8"
+                className="text-base text-center mt-8 antialiased"
                 style={{ fontFamily: '"Findet-Nemo"' }}
               >
                 Las bolsas selladas apareceran aqui
@@ -320,13 +320,13 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
                     className="bg-white/10 border border-white/20 rounded-lg p-3 min-w-[200px]"
                   >
                     <span
-                      className="text-white/60 text-xs mb-1 block"
+                      className="text-white/60 text-sm mb-1 block antialiased"
                       style={{ fontFamily: '"Findet-Nemo"' }}
                     >
                       Bolsa #{bag.id}
                     </span>
                     <div
-                      className="relative w-full h-[100px] mb-2 rounded-b-[40%] bg-white/10 border-2 border-white/20 flex items-center justify-center gap-1 flex-wrap"
+                      className="relative w-full h-[120px] mb-2 rounded-b-[40%] bg-white/10 border-2 border-white/20 flex items-center justify-center gap-1 flex-wrap"
                       style={{
                         background:
                           "radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.06) 40%, rgba(255,255,255,0.02) 100%)",
@@ -337,18 +337,18 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
                           <Image
                             src={item.fish.image}
                             alt={item.fish.name}
-                            width={36}
-                            height={36}
+                            width={48}
+                            height={48}
                             className="rounded"
                           />
-                          <span className="text-white/70 text-[10px]">
+                          <span className="text-white/70 text-xs">
                             {item.aggressiveness}
                           </span>
                         </div>
                       ))}
                     </div>
                     <p
-                      className="text-white text-sm text-center"
+                      className="text-white text-base text-center antialiased"
                       style={{ fontFamily: '"Findet-Nemo"' }}
                     >
                       Costo:{" "}
@@ -364,7 +364,7 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
         {/* Right Sidebar */}
         <div className="w-64 shrink-0 border-l p-4 flex flex-col gap-4 overflow-y-hidden bg-linear-90 from-cyan-800 to-cyan-950 rounded-2xl border-2 border-cyan-300 shadow shadow-cyan-300 m-4">
           <h2
-            className="text-white text-xl text-center"
+            className="text-white text-2xl text-center antialiased"
             style={{ fontFamily: '"Findet-Nemo"' }}
           >
             Quiero...
@@ -385,12 +385,12 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
                 <Image
                   src={f.image}
                   alt={f.name}
-                  width={32}
-                  height={32}
+                  width={40}
+                  height={40}
                   className="rounded"
                 />
                 <span
-                  className="text-white text-sm"
+                  className="text-white text-base antialiased"
                   style={{ fontFamily: '"Findet-Nemo"' }}
                 >
                   {f.name}
@@ -411,7 +411,7 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
               className="accent-red-500 w-4 h-4"
             />
             <span
-              className="text-white/60 text-xs"
+              className="text-white/60 text-sm antialiased"
               style={{ fontFamily: '"Findet-Nemo"' }}
             >
               Comunidad
@@ -420,7 +420,7 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
 
           <button
             onClick={handleClearAll}
-            className="bg-white/10 text-white/70 px-3 py-1.5 rounded-lg hover:bg-white/20 transition-colors text-sm"
+            className="bg-white/10 text-white/70 px-3 py-1.5 rounded-lg hover:bg-white/20 transition-colors text-base antialiased"
             style={{ fontFamily: '"Findet-Nemo"' }}
           >
             Limpiar todo
@@ -428,7 +428,7 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
 
           <button
             onClick={handleCalculate}
-            className="bg-amber-600 text-white px-4 py-3 rounded-lg hover:bg-amber-500 transition-colors text-lg"
+            className="bg-amber-600 text-white px-4 py-3 rounded-lg hover:bg-amber-500 transition-colors text-xl antialiased"
             style={{ fontFamily: '"Findet-Nemo"' }}
           >
             Calcular
@@ -442,14 +442,14 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
           <div className="bg-gray-900 border border-white/20 rounded-xl p-6 max-w-xl w-full max-h-[80vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
               <h2
-                className="text-white text-2xl"
+                className="text-white text-3xl antialiased"
                 style={{ fontFamily: '"Findet-Nemo"' }}
               >
                 Resultados - {usedSolver === "custom" ? "Impl. Propia" : "Comunidad"}
               </h2>
               <button
                 onClick={() => setResults(null)}
-                className="text-white/60 hover:text-white text-xl transition-colors"
+                className="text-white/60 hover:text-white text-2xl transition-colors"
                 style={{ fontFamily: '"Findet-Nemo"' }}
               >
                 X
@@ -458,7 +458,7 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
 
             {results.length === 0 ? (
               <p
-                className="text-white/60 text-center py-8"
+                className="text-white/60 text-center py-8 text-lg antialiased"
                 style={{ fontFamily: '"Findet-Nemo"' }}
               >
                 No hay combinacion de bolsas que cubra todas las especies.
@@ -480,13 +480,13 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
                     >
                       <div className="flex items-center justify-between mb-2">
                         <span
-                          className="text-white"
+                          className="text-white text-lg antialiased"
                           style={{ fontFamily: '"Findet-Nemo"' }}
                         >
                           {i === 0 && "★ "}Propuesta {i + 1}
                         </span>
                         <span
-                          className="text-amber-400"
+                          className="text-amber-400 text-lg antialiased"
                           style={{ fontFamily: '"Findet-Nemo"' }}
                         >
                           Costo: {result.totalCost}
@@ -496,13 +496,13 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
                         {resultBags.map((bag) => (
                           <div key={bag.id} className="flex flex-col items-center gap-0.5">
                             <span
-                              className="text-white/50 text-[10px]"
+                              className="text-white/50 text-xs antialiased"
                               style={{ fontFamily: '"Findet-Nemo"' }}
                             >
                               #{bag.id}
                             </span>
                             <div
-                              className="relative w-[80px] h-[80px] rounded-b-[35%] bg-white/10 border-2 border-white/20 flex items-center justify-center gap-0.5 flex-wrap"
+                              className="relative w-[90px] h-[90px] rounded-b-[35%] bg-white/10 border-2 border-white/20 flex items-center justify-center gap-0.5 flex-wrap"
                               style={{
                                 background:
                                   "radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.08) 40%, rgba(255,255,255,0.03) 100%)",
@@ -513,11 +513,11 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
                                 <Image
                                   src={item.fish.image}
                                   alt={item.fish.name}
-                                  width={28}
-                                  height={28}
+                                  width={32}
+                                  height={32}
                                   className="rounded"
                                 />
-                                <span className="absolute -bottom-1 -right-1 bg-black/70 text-white text-[9px] rounded px-0.5">
+                                <span className="absolute -bottom-1 -right-1 bg-black/70 text-white text-[10px] rounded px-0.5">
                                   {item.aggressiveness}
                                 </span>
                               </div>
@@ -531,7 +531,7 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
                 })}
                 {results.length > 10 && (
                   <p
-                    className="text-white/40 text-sm text-center"
+                    className="text-white/40 text-base text-center antialiased"
                     style={{ fontFamily: '"Findet-Nemo"' }}
                   >
                     ...y {results.length - 10} propuestas mas
