@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import MusicPlayer from "@/components/MusicPlayer";
 import { allFish } from "@/app/weighted-set/fish-data";
+import { script } from "@/app/weighted-set/script";
 import { solveWeightedSetCover } from "@/lib/weighted-set-solver";
 import { communitySolveWeightedSetCover } from "@/lib/weighted-set-community";
 import { toIdentifiedSet } from "@/lib/weighted-set-types";
@@ -25,6 +26,8 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
   const [usedSolver, setUsedSolver] = useState<"custom" | "community">("custom");
   const [useSolver, setUseSolver] = useState<"custom" | "community">("custom");
   const bagCounter = useRef(1);
+  const [showIntro, setShowIntro] = useState(true);
+  const [introPage, setIntroPage] = useState(0);
 
   function handleClearAll() {
     setCurrentBag([]);
@@ -540,6 +543,64 @@ export default function WeightedSetMenu({ audioPath }: WeightedSetMenuProps) {
                 )}
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Intro Modal */}
+      {showIntro && (
+        <div className="absolute inset-0 bg-black/70 z-50 flex items-center justify-center p-8">
+          <div className="bg-gray-900 border border-white/20 rounded-xl p-10 w-[75vw] h-[75vh] flex flex-col">
+            <div className="flex items-center justify-between mb-6">
+              <h2
+                className="text-white text-3xl antialiased"
+                style={{ fontFamily: '"Findet-Nemo"' }}
+              >
+                El Problema
+              </h2>
+              <button
+                onClick={() => setShowIntro(false)}
+                className="text-white/60 hover:text-white text-2xl transition-colors"
+                style={{ fontFamily: '"Findet-Nemo"' }}
+              >
+                X
+              </button>
+            </div>
+
+            <p
+              className="text-white/90 text-xl leading-relaxed flex-1 antialiased"
+            >
+              {script[introPage].text}
+            </p>
+
+            <div className="flex items-center justify-between mt-6">
+              <button
+                onClick={() => setIntroPage((p) => p - 1)}
+                disabled={introPage === 0}
+                className="bg-white/10 text-white px-6 py-3 rounded-lg hover:bg-white/20 transition-colors disabled:opacity-30 disabled:cursor-not-allowed text-lg antialiased"
+              >
+                Atras
+              </button>
+
+              <span
+                className="text-white/40 text-base"
+              >
+                {introPage + 1} / {script.length}
+              </span>
+
+              <button
+                onClick={() => {
+                  if (introPage < script.length - 1) {
+                    setIntroPage((p) => p + 1);
+                  } else {
+                    setShowIntro(false);
+                  }
+                }}
+                className="bg-amber-600 text-white px-6 py-3 rounded-lg hover:bg-amber-500 transition-colors text-lg antialiased"
+              >
+                {introPage < script.length - 1 ? "Siguiente" : "Entendido"}
+              </button>
+            </div>
           </div>
         </div>
       )}
