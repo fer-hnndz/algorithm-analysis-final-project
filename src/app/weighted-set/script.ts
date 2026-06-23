@@ -1,26 +1,11 @@
 import type { Page } from "@/lib/paginate";
 
 export const script: Page[] = [
-  { text: "Despues de escapar del consultorio del dentista..." },
-  { text: "La pandilla de la pecera flota en bolsas de plastico por el puerto." },
-  { text: "Lograron salir, pero ahora estan atrapados en bolsas individuales." },
-  { text: "No saben como abrirlas. Solo pueden flotar y esperar." },
-  { text: "De repente, un nino llamado Mateo se acerca al muelle." },
-  { text: "Mateo acaba de armar una pecera nueva y quiere poblarla." },
-  { text: "Al ver todas las bolsas con peces, sus ojos se iluminan." },
-  { text: "Pero Mateo solo quiere ciertas especies especificas en su pecera." },
-  { text: "No le interesa cualquier pez, sino unos muy particulares." },
-  { text: "El problema es que hay muchisimas bolsas en el muelle..." },
-  { text: "...y cada bolsa contiene peces de una misma especie." },
-  { text: "Pero no todas las especies son igual de pacificas." },
-  { text: "Cada especie tiene un nivel de agresividad distinto." },
-  { text: "Si Mateo junta especies muy agresivas, su pecera sera un desastre." },
-  { text: "Mateo necesita elegir un grupo de bolsas..." },
-  { text: "...que entre todas cubran cada una de las especies que quiere." },
-  { text: "Pero quiere que el nivel total de agresividad sea lo mas bajo posible." },
-  { text: "Cada bolsa representa un conjunto de peces con un costo..." },
-  { text: "...y ese costo es justamente su nivel de agresividad." },
-  { text: "Mateo debe encontrar la combinacion perfecta de bolsas." },
-  { text: "Cubrir todas las especies que desea al menor costo total." },
-  { text: "Podras ayudar a Mateo a elegir las bolsas correctas?" },
+  {
+    text: "Tras escapar del dentista, la pandilla de la pecera (Gill, Bloat, Peach, Gurgle, Bubbles, Deb, Jacques) quedo atrapada en bolsas de plastico flotando en el puerto. Un nino que arma una pecera nueva las ve. Solo quiere ciertas especies. Cada bolsa contiene peces de una misma especie y tiene un costo: su nivel de agresividad.",
+  },
+  {
+    text: "Para poblar su pecera necesita elegir un grupo de bolsas que entre todas cubran las especies que desea, al menor costo total de agresividad posible. Podras ayudarlo?",
+    lastOfMessage: true,
+  },
 ];
