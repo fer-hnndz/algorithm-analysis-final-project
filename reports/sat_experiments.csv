@@ -1,0 +1,8 @@
+label,num_vars,num_clauses,k,satisfiable,decisions,recursive_calls,unit_propagations,pure_literal_eliminations,elapsed_ms
+3-SAT n=5 m=10,5,10,3,True,1,2,0,2,0.093
+3-SAT n=10 m=20,10,20,3,True,1,2,0,8,0.211
+3-SAT n=15 m=40,15,40,3,True,2,3,3,9,0.646
+3-SAT n=20 m=60,20,60,3,True,3,5,23,5,1.041
+3-SAT n=20 m=85,20,85,3,True,5,6,14,0,1.782
+3-SAT n=25 m=106,25,106,3,True,5,6,18,0,2.776
+3-SAT n=30 m=128,30,128,3,True,16,29,196,12,9.115
