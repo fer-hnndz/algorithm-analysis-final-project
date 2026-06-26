@@ -15,7 +15,7 @@ type RemyDialogProps = {
  * escribir. Si un audio no existe para una línea, esa línea suena en silencio.
  */
 const REMY_LINES: readonly string[] = [
-  "¡Psst! Soy Remy. Llegó un pedido especial: la famosa Sopa de Linguini. No podemos servir cualquier plato viejo...",
+  "Soy Remy! Llegó un pedido especial: la famosa Sopa de Linguini. No podemos servir cualquier plato viejo...",
   "Cada ingrediente puede estar activado o desactivado. Tomate, queso, cebolla, champiñón, albahaca, picante, ajo y mantequilla.",
   "La sopa tiene reglas de sabor. Cada regla se cumple si al menos uno de sus ingredientes encaja: eso es un OR.",
   "Pero TODAS las reglas deben cumplirse a la vez, ¡al mismo tiempo! Eso es un AND entre todas las reglas.",
@@ -23,7 +23,7 @@ const REMY_LINES: readonly string[] = [
   "¿Existirá una receta perfecta? ¡Vamos a la cocina a descubrirlo con el algoritmo DPLL!",
 ];
 
-const DEFAULT_TYPE_SPEED_MS = 34;
+const DEFAULT_TYPE_SPEED_MS = 40;
 
 export function RemyDialog({ onClose }: RemyDialogProps) {
   const [lineIndex, setLineIndex] = useState(0);
