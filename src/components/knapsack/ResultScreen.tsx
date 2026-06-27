@@ -101,8 +101,7 @@ export function ResultScreen({ result, toys, onBack }: ResultScreenProps) {
             />
             <p className="pointer-events-none absolute bottom-[22%] left-1/2 -translate-x-1/2 -rotate-2 font-heading text-lg font-bold uppercase tracking-wide text-[oklch(0.4_0.06_55)] sm:text-2xl">
               Caja de mudanza
-              <br />
-              de Andy
+              
             </p>
           </div>
         </div>

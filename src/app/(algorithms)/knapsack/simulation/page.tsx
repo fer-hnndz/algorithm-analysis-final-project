@@ -79,7 +79,7 @@ export default function KnapsackSimulation() {
         <div className="flex items-center justify-between px-5 py-4 bg-gradient-to-b from-black/60 to-transparent rounded-3xl text-white">
           <div className="flex flex-col gap-1">
             <Link 
-              href="/knapsack" 
+              href="/" 
               className="flex items-center gap-1 text-xs font-bold opacity-80 hover:opacity-100 transition-opacity w-fit"
             >
               <ArrowLeft size={14} />
