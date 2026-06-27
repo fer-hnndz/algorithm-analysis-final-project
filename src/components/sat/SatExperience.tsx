@@ -1,6 +1,7 @@
 "use client";
 
-import { TriangleAlert } from "lucide-react";
+import Link from "next/link";
+import { ArrowLeft, TriangleAlert } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { evaluateClauses } from "@/lib/sat/dpll-solver";
 import { getExample } from "@/lib/sat/examples";
@@ -138,6 +139,14 @@ export function SatExperience() {
   return (
     <div className="relative mx-auto w-full max-w-[1400px] px-4 py-8 sm:px-6 lg:py-10">
       <BackgroundVideo />
+
+      <Link
+        href="/"
+        className="fixed left-4 top-4 z-20 inline-flex items-center gap-2 rounded-full border border-amber-200/20 bg-black/45 px-4 py-2 text-sm font-bold text-amber-100 backdrop-blur transition-colors hover:bg-black/65 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300/70"
+      >
+        <ArrowLeft className="h-4 w-4" aria-hidden />
+        Volver al menú
+      </Link>
 
       <header className="sat-fade-in mb-8 text-center">
         <span className="mb-3 inline-flex items-center gap-2 rounded-full border border-amber-300/30 bg-amber-400/10 px-4 py-1 text-xs font-bold uppercase tracking-[0.2em] text-amber-200 backdrop-blur">

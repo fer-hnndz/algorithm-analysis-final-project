@@ -154,6 +154,14 @@ export default function Home() {
             className="w-full h-full object-contain"
           />
         </div>
+        {phase === "video" && (
+          <button
+            onClick={skipToMenu}
+            className="absolute bottom-4 right-4 z-10 rounded-lg bg-black/60 px-6 py-2 text-xl text-white transition-colors hover:bg-black/80"
+          >
+            Skip
+          </button>
+        )}
       </div>
     );
   }

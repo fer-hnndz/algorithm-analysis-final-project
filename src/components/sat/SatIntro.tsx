@@ -1,6 +1,7 @@
 "use client";
 
-import { SkipForward, VolumeX } from "lucide-react";
+import Link from "next/link";
+import { ArrowLeft, SkipForward, VolumeX } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 type SatIntroProps = {
@@ -46,6 +47,14 @@ export function SatIntro({ onFinish }: SatIntroProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black">
+      <Link
+        href="/"
+        className="absolute left-4 top-4 z-10 inline-flex items-center gap-2 rounded-full border border-white/25 bg-black/45 px-4 py-2 text-sm font-bold text-white backdrop-blur transition-colors hover:bg-black/65 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300/70"
+      >
+        <ArrowLeft className="h-4 w-4" aria-hidden />
+        Volver al menú
+      </Link>
+
       <video
         ref={videoRef}
         className="h-full w-full object-cover"
