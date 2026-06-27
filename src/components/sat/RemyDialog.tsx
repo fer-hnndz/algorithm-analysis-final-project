@@ -1,6 +1,7 @@
 "use client";
 
-import { ChefHat, ChevronRight, Soup } from "lucide-react";
+import Link from "next/link";
+import { ArrowLeft, ChefHat, ChevronRight, Soup } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { SafeImage } from "./SafeImage";
 
@@ -92,6 +93,15 @@ export function RemyDialog({ onClose }: RemyDialogProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center overflow-hidden bg-[#1a0f0a] px-4 pb-8 sm:items-center sm:pb-4">
+      <Link
+        href="/"
+        onClick={stopAudio}
+        className="absolute left-4 top-4 z-20 inline-flex items-center gap-2 rounded-full border border-amber-200/20 bg-black/45 px-4 py-2 text-sm font-bold text-amber-100 backdrop-blur transition-colors hover:bg-black/65 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300/70"
+      >
+        <ArrowLeft className="h-4 w-4" aria-hidden />
+        Volver al menú
+      </Link>
+
       {/* Fondos atmosféricos */}
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-amber-950 via-[#2a140c] to-red-950" />
       <div

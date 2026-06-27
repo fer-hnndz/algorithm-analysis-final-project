@@ -7,11 +7,7 @@ function sortSubsets(a: Subset, b: Subset): number {
   );
 }
 
-/**
- * Exhaustively explores the include/exclude decision tree and returns every
- * subset whose combined lift equals the target. Its time complexity is
- * O(2^n), as expected for an exact Subset Sum search.
- */
+
 export function findBalloonSubsets(
   items: BalloonCluster[],
   targetKg: number,

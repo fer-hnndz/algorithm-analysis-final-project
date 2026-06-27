@@ -1,6 +1,7 @@
 "use client";
 
-import { ChefHat, Play, Volume2 } from "lucide-react";
+import Link from "next/link";
+import { ArrowLeft, ChefHat, Play, Volume2 } from "lucide-react";
 import { SafeImage } from "./SafeImage";
 
 type SatLandingProps = {
@@ -15,6 +16,14 @@ type SatLandingProps = {
 export function SatLanding({ onStart }: SatLandingProps) {
   return (
     <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-gradient-to-br from-stone-950 via-amber-950 to-red-950 px-6 text-center">
+      <Link
+        href="/"
+        className="absolute left-4 top-4 inline-flex items-center gap-2 rounded-full border border-amber-200/20 bg-black/45 px-4 py-2 text-sm font-bold text-amber-100 backdrop-blur transition-colors hover:bg-black/65 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300/70"
+      >
+        <ArrowLeft className="h-4 w-4" aria-hidden />
+        Volver al menú
+      </Link>
+
       <SafeImage
         src="/sat/remy-guide.png"
         alt="Remy"
