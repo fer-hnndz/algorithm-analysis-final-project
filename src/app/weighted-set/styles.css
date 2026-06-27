@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "Findet-Nemo";
+  src: url("/weighted/Findet-Nemo.ttf") format("truetype");
+}
+
+img {
+  image-rendering: pixelated;
+}
