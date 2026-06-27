@@ -24,39 +24,44 @@ export function AndyGuide({ initialMessage }: AndyGuideProps) {
   }, []);
 
   return (
-    <div className="relative h-full w-full" style={{ isolation: 'isolate' }}>
-      <div className="absolute z-20" style={{ bottom: '70%', left: '60%', maxWidth: 220 }}>
-        <div
-          className="rounded-2xl px-4 py-3 shadow-2xl"
-          style={{ background: 'white', border: '3px solid #e8a830' }}
-        >
-          <p className="text-sm font-bold leading-snug text-center" style={{ color: '#3d1f0a' }}>
-            {GUIDE_MESSAGES[messageIdx]}
-          </p>
-          <div
-            className="absolute"
-            style={{
-              left: -13,
-              top: '50%',
-              transform: 'translateY(-50%)',
-              width: 0,
-              height: 0,
-              borderTop: '10px solid transparent',
-              borderBottom: '10px solid transparent',
-              borderRight: '13px solid white',
-            }}
-          />
-        </div>
+    <div className="relative h-full w-full max-w-[360px] mx-auto" style={{ isolation: 'isolate' }}>
+      
+      {/* Burbuja de diálogo */}
+      
+<div className="absolute z-20" style={{ top: '26%', right: '-25px', maxWidth: 180 }}>
+  <div
+    className="rounded-2xl px-4 py-3 shadow-2xl relative"
+    style={{ background: 'white', border: '3px solid #e8a830' }}
+  >
+    <p className="text-xs font-bold leading-snug text-center" style={{ color: '#3d1f0a' }}>
+      {GUIDE_MESSAGES[messageIdx]}
+    </p>
+    
+    {/* Triangulito de la burbuja */}
+    <div
+      className="absolute"
+      style={{
+        left: -13,
+        top: '50%',
+        transform: 'translateY(-50%)',
+        width: 0,
+        height: 0,
+        borderTop: '8px solid transparent',
+        borderBottom: '8px solid transparent',
+        borderRight: '13px solid white',
+      }}
+    />
+  </div>
       </div>
 
+      {/* Imagen de Andy */}
       <img
         src="/knapsack_assets/Andy.png"
         alt="Andy"
-        className="absolute object-contain object-bottom drop-shadow-2xl"
+        className="absolute w-full max-w-[280px] object-contain object-bottom drop-shadow-2xl"
         style={{
           mixBlendMode: 'multiply',
-          height: 'clamp(500px, 90vh, 1100px)',
-          width: 'auto',
+          height: '100%',
           left: '0%',
           bottom: '-2%',
           opacity: 0.95,

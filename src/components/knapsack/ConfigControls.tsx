@@ -44,8 +44,8 @@ export function ConfigControls({
       <div className="flex items-center justify-between">
         <div className="flex-1">
           <div className="flex items-center justify-between mb-1">
-            <label className="text-xs font-bold tracking-wider" style={{ color: GOLD }}>ESTRATEGIA DE ANDY</label>
-            <span className="text-[10px] font-black uppercase italic" style={{ color: GOLD }}>Planificando la mudanza...</span>
+            <label className="text-[10px] font-black uppercase italic" style={{ color: GOLD }}>Planificando la mudanza...</label>
+            {/* <span className="text-[10px] font-black uppercase italic" style={{ color: GOLD }}>Planificando la mudanza...</span> */}
           </div>
           <div className="flex rounded-xl overflow-hidden p-1" style={{ background: '#2a1208', border: `2px solid #6b3a15` }}>
             {(['A', 'B'] as const).map(alg => (
@@ -57,7 +57,7 @@ export function ConfigControls({
                   ? { background: GOLD, color: PANEL }
                   : { background: 'transparent', color: '#d4a85588' }}
             >
-              {alg === 'A' ? 'A: Plan Maestro' : 'B: Rápido y Práctico'}
+              {alg === 'A' ? 'A: Enfoque Dinámico' : 'B: Enfoque Greedy'}
             </button>
             ))}
           </div>
