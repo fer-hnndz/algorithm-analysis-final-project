@@ -12,7 +12,7 @@ function cluster(id: string, liftKg: number): BalloonCluster {
   };
 }
 
-describe("findExactBalloonSubsets", () => {
+describe("findBalloonSubsets", () => {
   it("returns only combinations that equal the target", () => {
     const results = findBalloonSubsets(
       [cluster("A", 10), cluster("B", 15), cluster("C", 25)],
@@ -45,5 +45,16 @@ describe("findExactBalloonSubsets", () => {
   it("returns an empty list for an invalid target", () => {
     expect(findBalloonSubsets([cluster("A", 10)], 0)).toEqual([]);
     expect(findBalloonSubsets([cluster("A", 10)], -10)).toEqual([]);
+  });
+
+  it("searches exhaustively beyond the previous 16-cluster limit", () => {
+    const items = Array.from({ length: 17 }, (_, index) =>
+      cluster(`cluster-${index}`, 1),
+    );
+    const results = findBalloonSubsets(items, 17);
+
+    expect(results).toHaveLength(1);
+    expect(results[0].clusterCount).toBe(17);
+    expect(results[0].totalLiftKg).toBe(17);
   });
 });
