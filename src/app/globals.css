@@ -152,3 +152,45 @@ body::-webkit-scrollbar {
 details[open] > summary .sat-chevron {
   transform: rotate(180deg);
 }
+
+/* ── DVD Menu animations ─────────────────────────────────────────── */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes dvdFadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.dvd-fade-in {
+  animation: fadeIn 1.2s ease both;
+}
+
+.dvd-fade-out {
+  animation: dvdFadeOut 1s ease forwards;
+}
+
+.dvd-text-shadow {
+  text-shadow:
+    0 0 4px black,
+    0 0 8px black,
+    2px 2px 0 black,
+    -1px -1px 0 black,
+    1px -1px 0 black,
+    -1px 1px 0 black,
+    1px 1px 0 black;
+}
+
+.dvd-text-shadow-hover {
+  text-shadow:
+    0 0 6px rgba(255, 255, 255, 0.7),
+    0 0 12px rgba(255, 255, 255, 0.4),
+    2px 2px 0 black,
+    -1px -1px 0 black,
+    1px -1px 0 black,
+    -1px 1px 0 black,
+    1px 1px 0 black;
+}
