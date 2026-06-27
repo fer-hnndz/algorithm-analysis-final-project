@@ -1,28 +1,28 @@
 import type { BalloonCluster } from "@/lib/subset-sum-types";
 
-export const AIR_DENSITY_KG_M3 = 1.225;
-export const HELIUM_DENSITY_KG_M3 = 0.1785;
-export const BALLOON_VOLUME_M3 = 0.014;
-export const EMPTY_BALLOON_WEIGHT_KG = 0.003;
-export const UP_HOUSE_WEIGHT_KG = 258000;
+export const densidadAire = 1.225;
+export const densidadHelio = 0.1785;
+export const volumenGlobo = 0.014; //Use estos valores solo como estandar, siendo el r=0.15m
+export const pesoGloboVacio = 0.003; //aproximadamenete un globo de latex tiene un peso de 3g
+export const pesoCasaKG = 258000; //valor aproximado que halle en internet
 
-export const NET_LIFT_PER_BALLOON_KG =
-  (AIR_DENSITY_KG_M3 - HELIUM_DENSITY_KG_M3) * BALLOON_VOLUME_M3 -
-  EMPTY_BALLOON_WEIGHT_KG;
+export const liftTtlGloboKG =
+  (densidadAire - densidadHelio) * volumenGlobo -
+  pesoGloboVacio;
 
 export function calculateClusterLift(
   balloonCount: number,
-  materialWeightKg = EMPTY_BALLOON_WEIGHT_KG,
+  pesoMaterialKG = pesoGloboVacio,
 ): number {
-  const safeBalloonCount = Math.max(0, Math.round(Number.isFinite(balloonCount) ? balloonCount : 0));
-  const safeMaterialWeightKg = Math.max(
+  const safecantGlobos = Math.max(0, Math.round(Number.isFinite(balloonCount) ? balloonCount : 0));
+  const safePesoMaterialKg = Math.max(
     0,
-    Number.isFinite(materialWeightKg) ? materialWeightKg : EMPTY_BALLOON_WEIGHT_KG,
+    Number.isFinite(pesoMaterialKG) ? pesoMaterialKG : pesoGloboVacio,
   );
   const netLiftPerBalloon =
-    (AIR_DENSITY_KG_M3 - HELIUM_DENSITY_KG_M3) * BALLOON_VOLUME_M3 -
-    safeMaterialWeightKg;
-  const totalLiftKg = safeBalloonCount * netLiftPerBalloon;
+    (densidadAire - densidadHelio) * volumenGlobo -
+    safePesoMaterialKg;
+  const totalLiftKg = safecantGlobos * netLiftPerBalloon;
 
   // The simulator works with whole kilograms: any positive lift is represented
   // by at least 1 kg instead of disappearing when rounded.
@@ -32,16 +32,16 @@ export function calculateClusterLift(
 function makeCluster(
   id: string,
   name: string,
-  balloonCount: number,
+  cantGlobos: number,
   category: BalloonCluster["category"],
-  materialWeightKg = EMPTY_BALLOON_WEIGHT_KG,
+  pesoMaterialKG = pesoGloboVacio,
 ): BalloonCluster {
   return {
     id,
     name,
-    balloonCount,
-    liftKg: calculateClusterLift(balloonCount, materialWeightKg),
-    materialWeightKg,
+    cantGlobos: cantGlobos,
+    liftKg: calculateClusterLift(cantGlobos, pesoMaterialKG),
+    pesoMaterialKG: pesoMaterialKG,
     category,
   };
 }

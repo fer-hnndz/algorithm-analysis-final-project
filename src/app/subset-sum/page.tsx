@@ -5,17 +5,17 @@ import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties, KeyboardEvent } from "react";
 import {
-  BALLOON_VOLUME_M3,
-  EMPTY_BALLOON_WEIGHT_KG,
-  HELIUM_DENSITY_KG_M3,
-  AIR_DENSITY_KG_M3,
-  NET_LIFT_PER_BALLOON_KG,
-  UP_HOUSE_WEIGHT_KG,
+  volumenGlobo,
+  pesoGloboVacio,
+  densidadHelio,
+  densidadAire,
+  liftTtlGloboKG,
+  pesoCasaKG,
   calculateClusterLift,
   categoryLabels,
   defaultBalloonClusters,
 } from "@/app/subset-sum/balloon-data";
-import { rankBalloonSubsets } from "@/lib/subset-sum-solver";
+import { findBalloonSubsets } from "@/lib/subset-sum-solver";
 import type { BalloonCluster } from "@/lib/subset-sum-types";
 
 const categoryClasses: Record<BalloonCluster["category"], string> = {
@@ -25,25 +25,25 @@ const categoryClasses: Record<BalloonCluster["category"], string> = {
   special: "border-amber-300 bg-amber-100 text-amber-950",
 };
 
-const ASSET_BASE_PATH = "/subset-sum";
-const PAGE_BACKGROUND_IMAGE = `${ASSET_BASE_PATH}/upbg2.jpg`;
-const INTRO_VIDEO = `${ASSET_BASE_PATH}/videoIntro.mp4`;
-const BACKGROUND_MUSIC = `${ASSET_BASE_PATH}/upmedia.mp3`;
-const HOUSE_IMAGE = `${ASSET_BASE_PATH}/upHouseBG.png`;
-const CHIMNEY_ANCHOR = { x: 49.8, y: 65.5 };
-const MIN_BALLOON_COUNT = 1;
-const MIN_MATERIAL_WEIGHT_GRAMS = 1;
-const MAX_MATERIAL_WEIGHT_GRAMS = 10;
+const rutaBase = "/subset-sum";
+const imgBG = `${rutaBase}/upbg2.jpg`;
+const videoIntro = `${rutaBase}/videoIntro.mp4`;
+const musicBG = `${rutaBase}/upmedia.mp3`;
+const casaImg = `${rutaBase}/upHouseBG.png`;
+const chimCtr = { x: 49.8, y: 65.5 };
+const globosMin = 1;
+const materialMin = 1;
+const materialMax = 20;
 const balloonAssets = [
   {
-    src: `${ASSET_BASE_PATH}/1globo.png`,
+    src: `${rutaBase}/1globo.png`,
     minBalloons: 1,
     maxBalloons: 1000,
     label: "1 globo visual",
     points: [{ x: 0, y: 9.8 }],
   },
   {
-    src: `${ASSET_BASE_PATH}/3globos.png`,
+    src: `${rutaBase}/3globos.png`,
     minBalloons: 1001,
     maxBalloons: 3000,
     label: "3 globos visuales",
@@ -54,7 +54,7 @@ const balloonAssets = [
     ],
   },
   {
-    src: `${ASSET_BASE_PATH}/4globos.png`,
+    src: `${rutaBase}/4globos.png`,
     minBalloons: 3001,
     maxBalloons: 5000,
     label: "4 globos visuales",
@@ -66,7 +66,7 @@ const balloonAssets = [
     ],
   },
   {
-    src: `${ASSET_BASE_PATH}/6globos.png`,
+    src: `${rutaBase}/6globos.png`,
     minBalloons: 5001,
     maxBalloons: Number.POSITIVE_INFINITY,
     label: "6 globos visuales",
@@ -123,7 +123,7 @@ function categoryForLift(lift: number): BalloonCluster["category"] {
   return "special";
 }
 
-function getBalloonPosition(index: number, total: number) {
+function posGlobo(index: number, total: number) {
   const columns = Math.min(6, Math.max(4, Math.ceil(Math.sqrt(total * 1.35))));
   const row = Math.floor(index / columns);
   const column = index % columns;
@@ -156,26 +156,20 @@ function getBalloonLinePoints(
 }
 
 export default function SubsetSumPage() {
-  const [targetWeight, setTargetWeight] = useState(UP_HOUSE_WEIGHT_KG);
+  const [targetWeight, setTargetWeight] = useState(pesoCasaKG);
   const [focusedId, setFocusedId] = useState<string | null>(null);
-  const [customClusters, setCustomClusters] = useState<BalloonCluster[]>([]);
+  const [clusters, setClusters] = useState<BalloonCluster[]>(defaultBalloonClusters);
   const [balloonCount, setBalloonCount] = useState(1200000);
   const [materialWeightGrams, setMaterialWeightGrams] = useState(3);
-  const [musicOn, setMusicOn] = useState(false);
+  const [musicOn, setMusicOn] = useState(true);
   const [showIntro, setShowIntro] = useState(true);
   const [showContext, setShowContext] = useState(true);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  const clusters = useMemo(
-    () => [...defaultBalloonClusters, ...customClusters],
-    [customClusters],
-  );
-
-  const rankedResults = useMemo(
-    () => rankBalloonSubsets(clusters, targetWeight),
+  const exactResults = useMemo(
+    () => findBalloonSubsets(clusters, targetWeight),
     [clusters, targetWeight],
   );
-  const exactResults = rankedResults.filter((candidate) => candidate.gapKg === 0);
 
   const bestResult = exactResults[0] ?? null;
   const availableLift = clusters.reduce((sum, cluster) => sum + cluster.liftKg, 0);
@@ -191,13 +185,43 @@ export default function SubsetSumPage() {
   const materialWeightKg = materialWeightGrams / 1000;
   const previewLift = calculateClusterLift(balloonCount, materialWeightKg);
   const previewBalloonAsset = getBalloonAsset(balloonCount);
-  const sceneClusters = clusters;
 
   useEffect(() => {
     const audio = audioRef.current;
+    if (!audio) return;
+
+    let active = true;
+    audio.volume = 0.35;
+
+    const removeAutoplayFallback = () => {
+      document.removeEventListener("pointerdown", resumeAfterInteraction);
+      document.removeEventListener("keydown", resumeAfterInteraction);
+    };
+
+    const startMusic = () =>
+      audio.play().then(() => {
+        if (active) setMusicOn(true);
+        removeAutoplayFallback();
+      });
+
+    function resumeAfterInteraction() {
+      removeAutoplayFallback();
+      void startMusic().catch(() => {
+        if (active) setMusicOn(false);
+      });
+    }
+
+    void startMusic().catch(() => {
+      if (!active) return;
+      setMusicOn(false);
+      document.addEventListener("pointerdown", resumeAfterInteraction, { once: true });
+      document.addEventListener("keydown", resumeAfterInteraction, { once: true });
+    });
 
     return () => {
-      audio?.pause();
+      active = false;
+      removeAutoplayFallback();
+      audio.pause();
     };
   }, []);
 
@@ -207,34 +231,42 @@ export default function SubsetSumPage() {
 
   function updateBalloonCount(value: number) {
     if (!Number.isFinite(value)) return;
-    setBalloonCount(Math.max(MIN_BALLOON_COUNT, Math.round(value)));
+    setBalloonCount(Math.max(globosMin, Math.round(value)));
   }
 
   function updateMaterialWeight(value: number) {
     if (!Number.isFinite(value)) return;
     setMaterialWeightGrams(
       Math.min(
-        MAX_MATERIAL_WEIGHT_GRAMS,
-        Math.max(MIN_MATERIAL_WEIGHT_GRAMS, Math.round(value)),
+        materialMax,
+        Math.max(materialMin, Math.round(value)),
       ),
     );
   }
 
   function addCustomCluster() {
     const lift = previewLift;
-    const nextIndex = customClusters.length + 1;
+    const nextIndex = clusters.length + 1;
 
-    setCustomClusters((current) => [
+    setClusters((current) => [
       ...current,
       {
         id: `custom-${Date.now()}`,
         name: `Racimo personalizado ${nextIndex}`,
         liftKg: lift,
         category: categoryForLift(lift),
-        balloonCount,
-        materialWeightKg,
+        cantGlobos: balloonCount,
+        pesoMaterialKG: materialWeightKg,
       },
     ]);
+  }
+
+  function clearClusters() {
+    if (clusters.length === 0) return;
+    if (!window.confirm("¿Quieres borrar todos los racimos actuales?")) return;
+
+    setClusters([]);
+    setFocusedId(null);
   }
 
   function toggleMusic() {
@@ -255,17 +287,12 @@ export default function SubsetSumPage() {
     <main
       className="relative h-screen overflow-hidden bg-center bg-no-repeat p-3 text-slate-950 sm:p-4 lg:p-6"
       style={{
-        backgroundImage: `url(${PAGE_BACKGROUND_IMAGE})`,
+        backgroundImage: `url(${imgBG})`,
         backgroundSize: "cover",
       }}
     >
-      <audio ref={audioRef} src={BACKGROUND_MUSIC} loop preload="none" />
+      <audio ref={audioRef} src={musicBG} autoPlay loop preload="auto" />
       <style>{`
-        @keyframes sky-drift {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-        }
-
         @keyframes cloud-run {
           from { transform: translateX(-28vw); }
           to { transform: translateX(118vw); }
@@ -375,7 +402,7 @@ export default function SubsetSumPage() {
         <section className="absolute inset-0 z-50 flex items-center justify-center bg-black">
           <video
             className="h-full w-full object-cover"
-            src={INTRO_VIDEO}
+            src={videoIntro}
             autoPlay
             muted
             controls
@@ -387,7 +414,7 @@ export default function SubsetSumPage() {
             onClick={() => setShowIntro(false)}
             className="absolute right-5 top-5 rounded-full border border-white/30 bg-black/45 px-4 py-2 text-sm font-black text-white backdrop-blur transition hover:bg-white/20"
           >
-            Saltar intro
+            Skip
           </button>
         </section>
       ) : null}
@@ -407,8 +434,8 @@ export default function SubsetSumPage() {
               </h1>
               <p className="mt-2 max-w-3xl text-sm font-semibold leading-6 text-sky-50 md:text-base">
                 Simulador inspirado en Up: cada racimo aporta elevacion neta calculada con
-                Arquimedes. El reto es encontrar combinaciones de globos que alcancen o casi
-                alcancen el peso de la cabana con la menor cantidad posible de racimos.
+                Arquimedes. El reto es encontrar combinaciones de globos que coincidan
+                exactamente con el peso de la cabana usando la menor cantidad de racimos.
               </p>
             </div>
             <button
@@ -458,10 +485,10 @@ export default function SubsetSumPage() {
 
             <div className="lift-rig absolute inset-0">
               <div className="absolute inset-0 z-20">
-                {sceneClusters.map((cluster, index) => {
+                {clusters.map((cluster, index) => {
                 const selected = visibleIds.has(cluster.id);
-                const position = getBalloonPosition(index, sceneClusters.length);
-                const asset = getBalloonAsset(cluster.balloonCount);
+                const position = posGlobo(index, clusters.length);
+                const asset = getBalloonAsset(cluster.cantGlobos);
                 return (
                   <button
                     key={cluster.id}
@@ -478,7 +505,7 @@ export default function SubsetSumPage() {
                     className={`balloon-bundle absolute h-28 w-28 transition duration-200 hover:z-30 hover:brightness-110 focus:z-30 focus:outline-none focus:ring-4 focus:ring-white/70 sm:h-32 sm:w-32 lg:h-40 lg:w-40 ${
                       selected
                         ? "z-20 brightness-110 drop-shadow-[0_0_20px_rgba(255,255,255,0.85)]"
-                        : "opacity-80 saturate-90 disabled:opacity-25"
+                        : "opacity-80 saturate-90"
                     }`}
                     style={{
                       left: `${position.left}%`,
@@ -508,9 +535,9 @@ export default function SubsetSumPage() {
                 viewBox="0 0 100 100"
                 preserveAspectRatio="none"
             >
-                {sceneClusters.map((cluster, index) => {
-                const position = getBalloonPosition(index, sceneClusters.length);
-                const asset = getBalloonAsset(cluster.balloonCount);
+                {clusters.map((cluster, index) => {
+                const position = posGlobo(index, clusters.length);
+                const asset = getBalloonAsset(cluster.cantGlobos);
                 return getBalloonLinePoints(
                   position.left,
                   position.top,
@@ -521,8 +548,8 @@ export default function SubsetSumPage() {
                       key={`${cluster.id}-${pointIndex}`}
                       x1={point.x}
                       y1={point.y}
-                      x2={CHIMNEY_ANCHOR.x}
-                      y2={CHIMNEY_ANCHOR.y}
+                      x2={chimCtr.x}
+                      y2={chimCtr.y}
                       stroke={visibleIds.has(cluster.id) ? "rgba(255,255,255,0.72)" : "rgba(255,255,255,0.3)"}
                       strokeWidth={visibleIds.has(cluster.id) ? "0.2" : "0.1"}
                     />
@@ -532,7 +559,7 @@ export default function SubsetSumPage() {
 
               <div className="absolute bottom-4 left-1/2 z-20 h-[36%] w-[62%] -translate-x-1/2 sm:bottom-8">
               <Image
-                  src={HOUSE_IMAGE}
+                  src={casaImg}
                 alt="Cabana elevada por globos"
                 fill
                   sizes="420px"
@@ -546,9 +573,9 @@ export default function SubsetSumPage() {
                 <div className="pointer-events-none absolute bottom-4 left-4 z-30 w-72 rounded-lg border border-white/15 bg-black/60 p-4 text-sm text-white shadow-xl backdrop-blur">
                   <p className="text-lg font-black">{focusedCluster.name}</p>
                   <p className="mt-1 text-sky-100">
-                    {focusedCluster.balloonCount.toLocaleString("es-HN")} globos
-                    {focusedCluster.materialWeightKg != null
-                      ? ` | ${Math.round(focusedCluster.materialWeightKg * 1000).toLocaleString("es-HN")} g material`
+                    {focusedCluster.cantGlobos.toLocaleString("es-HN")} globos
+                    {focusedCluster.pesoMaterialKG != null
+                      ? ` | ${Math.round(focusedCluster.pesoMaterialKG * 1000).toLocaleString("es-HN")} g material`
                       : ""}
                   </p>
                 <div className="mt-3 flex items-center justify-between">
@@ -609,7 +636,17 @@ export default function SubsetSumPage() {
             </section>
 
             <section className="up-panel-card rounded-lg p-4">
-              <h2 className="text-lg font-black uppercase text-white">Agregar racimo</h2>
+              <div className="flex items-center justify-between gap-3">
+                <h2 className="text-lg font-black uppercase text-white">Agregar racimo</h2>
+                <button
+                  type="button"
+                  onClick={clearClusters}
+                  disabled={clusters.length === 0}
+                  className="rounded-md border border-rose-200/60 bg-rose-500/20 px-3 py-2 text-xs font-black uppercase text-rose-50 transition hover:bg-rose-500/35 disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  Borrar racimos
+                </button>
+              </div>
               <label htmlFor="balloon-count" className="mt-3 block text-sm font-black text-cyan-50">
                 Cantidad de globos
               </label>
@@ -617,7 +654,7 @@ export default function SubsetSumPage() {
                 <input
                   id="balloon-count"
                   type="number"
-                  min={MIN_BALLOON_COUNT}
+                  min={globosMin}
                   step={1}
                   value={balloonCount}
                   onChange={(event) => updateBalloonCount(Number(event.target.value))}
@@ -639,8 +676,8 @@ export default function SubsetSumPage() {
                 <input
                   id="material-weight"
                   type="number"
-                  min={MIN_MATERIAL_WEIGHT_GRAMS}
-                  max={MAX_MATERIAL_WEIGHT_GRAMS}
+                  min={materialMin}
+                  max={materialMax}
                   step={1}
                   value={materialWeightGrams}
                   onChange={(event) => updateMaterialWeight(Number(event.target.value))}
@@ -745,7 +782,7 @@ export default function SubsetSumPage() {
                           <span className="block text-xs font-black uppercase text-cyan-100">
                             Diferencia
                           </span>
-                          <strong className="text-white">{formatKg(candidate.gapKg)}</strong>
+                          <strong className="text-white">{formatKg(0)}</strong>
                         </p>
                       </div>
                       <p className="mt-2 text-xs leading-5 text-cyan-50">
@@ -760,8 +797,8 @@ export default function SubsetSumPage() {
             <section className="up-panel-card rounded-lg p-4">
               <h2 className="text-lg font-black uppercase text-white">Fisica del globo</h2>
               <p className="mt-2 text-sm leading-6 text-cyan-50">
-                Cada racimo usa: n x [({AIR_DENSITY_KG_M3} - {HELIUM_DENSITY_KG_M3}) x{" "}
-                {BALLOON_VOLUME_M3} - peso material].
+                Cada racimo usa: n x [({densidadAire} - {densidadHelio}) x{" "}
+                {volumenGlobo} - peso material].
               </p>
               <p className="mt-2 text-sm leading-6 text-cyan-50">
                 El peso del material es un buen factor variable: cambia por latex, plastico,
@@ -769,13 +806,13 @@ export default function SubsetSumPage() {
                 demasiado el modelo.
               </p>
               <p className="mt-2 text-sm leading-6 text-cyan-50">
-                Con {Math.round(EMPTY_BALLOON_WEIGHT_KG * 1000).toLocaleString("es-HN")} g de
+                Con {Math.round(pesoGloboVacio * 1000).toLocaleString("es-HN")} g de
                 material, cada globo aporta cerca de{" "}
-                <strong>{Math.round(NET_LIFT_PER_BALLOON_KG * 1000).toLocaleString("es-HN")} g</strong>.
+                <strong>{Math.round(liftTtlGloboKG * 1000).toLocaleString("es-HN")} g</strong>.
               </p>
               <p className="mt-2 text-sm font-black text-yellow-100">
-                El algoritmo conserva una esencia propia: agrupa la mejor alternativa por
-                cantidad de racimos y prioriza alcanzar la meta, menor brecha y menor exceso.
+                El algoritmo conserva una esencia propia: busca solamente sumas exactas y
+                ordena las soluciones por la menor cantidad de racimos.
               </p>
             </section>
           </div>
