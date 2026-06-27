@@ -145,15 +145,13 @@ export default function Home() {
 
   if (phase === "video" || phase === "fading") {
     return (
-      <div className="relative h-screen w-screen bg-black">
-        <div className={phase === "fading" ? "dvd-fade-out" : ""}>
+      <div className={`relative h-screen w-screen bg-black overflow-hidden ${phase === "fading" ? "dvd-fade-out" : ""}`}>
           <video
             ref={videoRef}
             src="/disney-intro-cropped.webm"
             onEnded={handleVideoEnded}
-            className="w-full h-full object-contain"
+            className="absolute inset-0 w-full h-full object-contain"
           />
-        </div>
         {phase === "video" && (
           <button
             onClick={skipToMenu}
