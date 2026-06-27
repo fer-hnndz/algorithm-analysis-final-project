@@ -32,12 +32,12 @@ const ALGORITHMS = [
     image: "/sat/menu-bg.jpg",
   },
   {
-    id: "problema-4",
+    id: "subset-sum",
     number: "04",
-    title: "Problema 4",
-    subtitle: "En construccion...",
-    href: "#",
-    image: null,
+    title: "Subset Sum",
+    subtitle: "La Aventura de Carl",
+    href: "/subset-sum",
+    image: "/subset-sum/upbg2.jpg",
   },
 ];
 
