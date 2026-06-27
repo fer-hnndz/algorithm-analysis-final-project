@@ -44,6 +44,19 @@ export type Formula = Clause[];
 /** Asignación parcial de verdad para los ingredientes. */
 export type Assignment = Partial<Record<IngredientId, boolean>>;
 
+/** Método de resolución SAT disponible en la interfaz. */
+export type SolverMethod =
+  | "community-dpll"
+  | "student-dpll"
+  | "plain-search";
+
+export type SolverOption = {
+  id: SolverMethod;
+  title: string;
+  shortTitle: string;
+  description: string;
+};
+
 /** Estadísticas del proceso del solver DPLL. */
 export type SolverStats = {
   variables: number;

@@ -2,9 +2,10 @@
 
 import { TriangleAlert } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { evaluateClauses, solveSat } from "@/lib/sat/dpll-solver";
+import { evaluateClauses } from "@/lib/sat/dpll-solver";
 import { getExample } from "@/lib/sat/examples";
-import type { Clause, Literal, SolverResult } from "@/lib/sat/types";
+import { SOLVER_OPTIONS, solveWithMethod } from "@/lib/sat/solver-methods";
+import type { Clause, Literal, SolverMethod, SolverResult } from "@/lib/sat/types";
 import { BackgroundVideo } from "./BackgroundVideo";
 import { ClauseBuilder } from "./ClauseBuilder";
 import { IngredientSelector } from "./IngredientSelector";
@@ -35,6 +36,8 @@ export function SatExperience() {
   const [clauses, setClauses] = useState<Clause[]>([]);
   const [result, setResult] = useState<SolverResult | null>(null);
   const [warning, setWarning] = useState<string | null>(null);
+  const [selectedMethod, setSelectedMethod] =
+    useState<SolverMethod>("community-dpll");
 
   const clauseIdRef = useRef(0);
   const { musicOn, startMusic, toggleMusic, play } = useSatSound();
@@ -97,10 +100,18 @@ export function SatExperience() {
     }
     setWarning(null);
     // El solver recibe una copia de las cláusulas y no muta el estado.
-    const computed = solveSat(clauses.map((c) => ({ ...c, literals: [...c.literals] })));
+    const computed = solveWithMethod(
+      clauses.map((c) => ({ ...c, literals: [...c.literals] })),
+      selectedMethod
+    );
     setResult(computed);
     play(computed.satisfiable ? "success" : "error");
   };
+
+  const selectedOption = useMemo(
+    () => SOLVER_OPTIONS.find((option) => option.id === selectedMethod),
+    [selectedMethod]
+  );
 
   // Mapa id de cláusula -> satisfecha, solo cuando hay asignación válida.
   const satisfiedById = useMemo<Record<string, boolean> | null>(() => {
@@ -131,7 +142,7 @@ export function SatExperience() {
       <header className="sat-fade-in mb-8 text-center">
         <span className="mb-3 inline-flex items-center gap-2 rounded-full border border-amber-300/30 bg-amber-400/10 px-4 py-1 text-xs font-bold uppercase tracking-[0.2em] text-amber-200 backdrop-blur">
           <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-          DPLL Solver
+          {selectedOption?.shortTitle ?? "SAT Solver"}
         </span>
         <h1 className="sat-title-accent text-4xl font-black leading-tight tracking-tight drop-shadow-[0_3px_12px_rgba(0,0,0,0.6)] sm:text-5xl lg:text-6xl">
           La Sopa Perfecta de Linguini
@@ -169,6 +180,12 @@ export function SatExperience() {
           onSolve={solve}
           onClear={clearAll}
           onToggleMusic={toggleMusic}
+          selectedMethod={selectedMethod}
+          onSelectMethod={(method) => {
+            setSelectedMethod(method);
+            setResult(null);
+            play("click");
+          }}
           musicOn={musicOn}
           canSolve={clauses.length > 0}
         />
@@ -180,6 +197,7 @@ export function SatExperience() {
             result={result}
             clauses={clauses}
             satisfiedById={satisfiedById ?? {}}
+            methodTitle={selectedOption?.title}
           />
         )}
         <SatExplanation trace={result?.trace ?? null} />

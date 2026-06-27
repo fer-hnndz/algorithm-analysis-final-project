@@ -2,6 +2,7 @@
 
 import {
   Ban,
+  Check,
   Flame,
   Soup,
   Sparkles,
@@ -10,12 +11,16 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { SAT_EXAMPLES } from "@/lib/sat/examples";
+import { SOLVER_OPTIONS } from "@/lib/sat/solver-methods";
+import type { SolverMethod } from "@/lib/sat/types";
 
 type SatMenuProps = {
   onLoadExample: (id: string) => void;
   onSolve: () => void;
   onClear: () => void;
   onToggleMusic: () => void;
+  selectedMethod: SolverMethod;
+  onSelectMethod: (method: SolverMethod) => void;
   musicOn: boolean;
   canSolve: boolean;
 };
@@ -39,12 +44,60 @@ export function SatMenu({
   onSolve,
   onClear,
   onToggleMusic,
+  selectedMethod,
+  onSelectMethod,
   musicOn,
   canSolve,
 }: SatMenuProps) {
   return (
     <section className="sat-panel flex flex-col gap-4 p-5">
       <h2 className="text-xl font-extrabold sat-title-accent">Cocina de Remy</h2>
+
+      <fieldset className="flex flex-col gap-2">
+        <legend className="text-[11px] font-bold uppercase tracking-[0.18em] text-amber-200/60">
+          Código a ejecutar
+        </legend>
+        {SOLVER_OPTIONS.map((option) => {
+          const checked = selectedMethod === option.id;
+          return (
+            <label
+              key={option.id}
+              className={[
+                "group flex cursor-pointer gap-3 rounded-2xl border p-3 transition-all duration-200 hover:bg-white/10",
+                checked
+                  ? "border-amber-300/50 bg-amber-300/12"
+                  : "border-amber-200/15 bg-white/5",
+              ].join(" ")}
+            >
+              <input
+                type="checkbox"
+                checked={checked}
+                onChange={() => onSelectMethod(option.id)}
+                className="sr-only"
+              />
+              <span
+                className={[
+                  "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border",
+                  checked
+                    ? "border-amber-300 bg-amber-300 text-stone-950"
+                    : "border-amber-200/30 text-transparent",
+                ].join(" ")}
+                aria-hidden
+              >
+                <Check className="h-3.5 w-3.5" />
+              </span>
+              <span className="min-w-0">
+                <span className="block text-sm font-bold text-amber-50">
+                  {option.title}
+                </span>
+                <span className="block text-xs leading-snug text-amber-100/55">
+                  {option.description}
+                </span>
+              </span>
+            </label>
+          );
+        })}
+      </fieldset>
 
       <div className="flex flex-col gap-2">
         <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-amber-200/60">

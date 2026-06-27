@@ -9,6 +9,7 @@ type SatResultProps = {
   clauses: Clause[];
   /** Estado de satisfacción por id de cláusula. */
   satisfiedById: Record<string, boolean>;
+  methodTitle?: string;
 };
 
 function StatCard({ label, value }: { label: string; value: string | number }) {
@@ -26,7 +27,12 @@ function StatCard({ label, value }: { label: string; value: string | number }) {
  * Resultado del solver: indica si existe receta perfecta, muestra la asignación
  * (ingredientes Sí/No), las cláusulas satisfechas y las estadísticas de DPLL.
  */
-export function SatResult({ result, clauses, satisfiedById }: SatResultProps) {
+export function SatResult({
+  result,
+  clauses,
+  satisfiedById,
+  methodTitle,
+}: SatResultProps) {
   const { satisfiable, assignment, stats } = result;
 
   return (
@@ -70,6 +76,11 @@ export function SatResult({ result, clauses, satisfiedById }: SatResultProps) {
               ? "Esta asignación de ingredientes satisface todas las reglas al mismo tiempo."
               : "Ninguna combinación de ingredientes satisface todas las reglas."}
           </p>
+          {methodTitle && (
+            <p className="mt-2 inline-flex rounded-full border border-amber-200/15 bg-white/5 px-3 py-1 text-xs font-semibold text-amber-100/60">
+              Método usado: {methodTitle}
+            </p>
+          )}
         </div>
       </div>
 
