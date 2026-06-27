@@ -13,8 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Proyecto Final: Problemas NP",
-  description: "Simuladores interactivos de problemas de optimizacion NP.",
+  title: "Disney - Peliculas NP",
 };
 
 export default function RootLayout({
