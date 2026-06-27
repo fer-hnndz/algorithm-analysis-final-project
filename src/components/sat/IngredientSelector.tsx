@@ -21,7 +21,7 @@ export function IngredientSelector({ assignment }: IngredientSelectorProps) {
         Cada ingrediente es una variable booleana.
       </p>
 
-      <ul className="mt-4 grid grid-cols-2 gap-2.5 lg:grid-cols-1 xl:grid-cols-2">
+      <ul className="mt-4 grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-1">
         {INGREDIENTS.map((ingredient) => {
           const value = assignment ? assignment[ingredient.id] : undefined;
           const state = value === undefined ? "neutral" : value ? "on" : "off";
@@ -45,7 +45,7 @@ export function IngredientSelector({ assignment }: IngredientSelectorProps) {
                 fallbackClassName="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-amber-400/15 text-2xl"
               />
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-bold text-amber-50">
+                <p className="break-words text-sm font-bold leading-tight text-amber-50">
                   {ingredient.name}
                 </p>
                 <p

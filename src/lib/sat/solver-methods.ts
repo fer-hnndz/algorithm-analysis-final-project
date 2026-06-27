@@ -22,8 +22,8 @@ export const SOLVER_OPTIONS: readonly SolverOption[] = [
   },
   {
     id: "student-dpll",
-    title: "DPLL estudiantil",
-    shortTitle: "DPLL simple",
+    title: "DPLL propio",
+    shortTitle: "DPLL propio",
     description:
       "Versión inspirada en DPLL: propaga unitarias, pero elige variables en orden y no usa literales puros.",
   },
