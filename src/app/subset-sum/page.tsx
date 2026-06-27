@@ -11,6 +11,8 @@ import {
   densidadAire,
   liftTtlGloboKG,
   pesoCasaKG,
+  margenSeguridadElevacion,
+  calcularMetaElevacion,
   calculateClusterLift,
   categoryLabels,
   defaultBalloonClusters,
@@ -39,14 +41,14 @@ const balloonAssets = [
     src: `${rutaBase}/1globo.png`,
     minBalloons: 1,
     maxBalloons: 1000,
-    label: "1 globo visual",
+    label: "Globos ligeros",
     points: [{ x: 0, y: 9.8 }],
   },
   {
     src: `${rutaBase}/3globos.png`,
     minBalloons: 1001,
     maxBalloons: 3000,
-    label: "3 globos visuales",
+    label: "Globos medianos",
     points: [
       { x: -6.8, y: 6.2 },
       { x: 0, y: 5.5 },
@@ -57,7 +59,7 @@ const balloonAssets = [
     src: `${rutaBase}/4globos.png`,
     minBalloons: 3001,
     maxBalloons: 5000,
-    label: "4 globos visuales",
+    label: "Globos pesados",
     points: [
       { x: -7.8, y: 5.8 },
       { x: -1.4, y: 5.1 },
@@ -69,7 +71,7 @@ const balloonAssets = [
     src: `${rutaBase}/6globos.png`,
     minBalloons: 5001,
     maxBalloons: Number.POSITIVE_INFINITY,
-    label: "6 globos visuales",
+    label: "Globos potentes",
     points: [
       { x: -7.2, y: -0.8 },
       { x: -2.8, y: -4.2 },
@@ -156,7 +158,7 @@ function getBalloonLinePoints(
 }
 
 export default function SubsetSumPage() {
-  const [targetWeight, setTargetWeight] = useState(pesoCasaKG);
+  const [houseWeight, setHouseWeight] = useState(pesoCasaKG);
   const [focusedId, setFocusedId] = useState<string | null>(null);
   const [clusters, setClusters] = useState<BalloonCluster[]>(defaultBalloonClusters);
   const [balloonCount, setBalloonCount] = useState(1200000);
@@ -165,6 +167,7 @@ export default function SubsetSumPage() {
   const [showIntro, setShowIntro] = useState(true);
   const [showContext, setShowContext] = useState(true);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const targetWeight = calcularMetaElevacion(houseWeight);
 
   const exactResults = useMemo(
     () => findBalloonSubsets(clusters, targetWeight),
@@ -225,8 +228,8 @@ export default function SubsetSumPage() {
     };
   }, []);
 
-  function updateTarget(value: number) {
-    setTargetWeight(normalizeKg(value));
+  function updateHouseWeight(value: number) {
+    setHouseWeight(normalizeKg(value));
   }
 
   function updateBalloonCount(value: number) {
@@ -427,15 +430,15 @@ export default function SubsetSumPage() {
                 href="/"
                 className="inline-flex rounded-md border border-white/20 bg-white/10 px-3 py-2 text-sm font-black text-white shadow-sm backdrop-blur transition hover:bg-white/20"
               >
-                Atras
+                Atrás
               </Link>
               <h1 className="mt-3 max-w-3xl text-3xl font-black leading-tight text-white md:text-5xl">
-                Elevando la Casa
+                Volar hasta Paradise Falls
               </h1>
               <p className="mt-2 max-w-3xl text-sm font-semibold leading-6 text-sky-50 md:text-base">
-                Simulador inspirado en Up: cada racimo aporta elevacion neta calculada con
-                Arquimedes. El reto es encontrar combinaciones de globos que coincidan
-                exactamente con el peso de la cabana usando la menor cantidad de racimos.
+                Cada conjunto de globos aporta una elevación calculada con el teorema de Arquímedes.
+                El reto es encontrar combinaciones de globos que coincidan
+                exactamente con el peso de la casa de Carl y Ellie usando la menor cantidad de globos.
               </p>
             </div>
             <button
@@ -593,17 +596,17 @@ export default function SubsetSumPage() {
           <aside className="up-panel relative z-20 min-h-0 rounded-lg text-white backdrop-blur-md">
             <div className="flex h-full min-h-0 flex-col gap-4 overflow-y-auto px-5 py-5">
             <section className="up-panel-card rounded-lg p-4">
-              <label htmlFor="target-weight" className="text-sm font-black uppercase text-cyan-50">
-                Peso objetivo de elevacion
+              <label htmlFor="house-weight" className="text-sm font-black uppercase text-cyan-50">
+                Peso de la casa
               </label>
               <input
-                id="target-weight"
+                id="house-weight"
                 type="range"
                 min={1000}
                 max={600000}
                 step={1000}
-                value={targetWeight}
-                onChange={(event) => updateTarget(Number(event.target.value))}
+                value={houseWeight}
+                onChange={(event) => updateHouseWeight(Number(event.target.value))}
                 className="mt-3 w-full accent-fuchsia-600"
               />
               <div className="mt-3 flex items-center gap-2 rounded-md border border-sky-200 bg-sky-50 px-3 py-2">
@@ -612,21 +615,32 @@ export default function SubsetSumPage() {
                   min={0}
                   max={2000000}
                   step={1000}
-                  value={targetWeight}
-                  onChange={(event) => updateTarget(Number(event.target.value))}
+                  value={houseWeight}
+                  onChange={(event) => updateHouseWeight(Number(event.target.value))}
                   onKeyDown={blockNegativeNumberKeys}
                   className="w-full bg-transparent text-lg font-black text-slate-950 outline-none"
-                  aria-label="Ingresar peso objetivo"
+                  aria-label="Ingresar peso de la casa"
                 />
                 <span className="text-sm font-black text-fuchsia-700">kg</span>
+              </div>
+              <div className="mt-3 rounded-md border border-yellow-200/50 bg-yellow-300/15 p-3">
+                <p className="text-xs font-black uppercase text-yellow-100">
+                  Objetivo de elevación (+{Math.round(margenSeguridadElevacion * 100)}%)
+                </p>
+                <p className="mt-1 text-2xl font-black text-white">
+                  {formatKg(targetWeight)}
+                </p>
+                <p className="mt-1 text-xs leading-5 text-cyan-50">
+                  Debe superar el peso de la casa para hacerla flotar
+                </p>
               </div>
             </section>
 
             <section className="grid grid-cols-3 gap-2 text-center">
               {[
-                { label: "Elevacion", value: Math.round(displayTotal).toLocaleString("es-HN") },
+                { label: "Elevación", value: Math.round(displayTotal).toLocaleString("es-HN") },
                 { label: displayRemaining < 0 ? "Exceso" : "Faltante", value: Math.abs(Math.round(displayRemaining)).toLocaleString("es-HN") },
-                { label: "Racimos", value: displayCount },
+                { label: "Conjuntos", value: displayCount },
               ].map((stat) => (
                 <div key={stat.label} className="up-panel-card rounded-lg p-3">
                   <p className="text-xs font-black uppercase text-yellow-100">{stat.label}</p>
@@ -637,14 +651,14 @@ export default function SubsetSumPage() {
 
             <section className="up-panel-card rounded-lg p-4">
               <div className="flex items-center justify-between gap-3">
-                <h2 className="text-lg font-black uppercase text-white">Agregar racimo</h2>
+                <h2 className="text-lg font-black uppercase text-white">Agregar globos</h2>
                 <button
                   type="button"
                   onClick={clearClusters}
                   disabled={clusters.length === 0}
                   className="rounded-md border border-rose-200/60 bg-rose-500/20 px-3 py-2 text-xs font-black uppercase text-rose-50 transition hover:bg-rose-500/35 disabled:cursor-not-allowed disabled:opacity-40"
                 >
-                  Borrar racimos
+                  Eliminar globos
                 </button>
               </div>
               <label htmlFor="balloon-count" className="mt-3 block text-sm font-black text-cyan-50">
@@ -687,7 +701,7 @@ export default function SubsetSumPage() {
                 <span className="text-sm font-black text-fuchsia-700">g</span>
               </div>
               <p className="mt-3 text-sm leading-6 text-cyan-50">
-                Elevacion calculada: <strong>{formatKg(previewLift)}</strong>.
+                Elevación calculada: <strong>{formatKg(previewLift)}</strong>.
               </p>
               <div className="mt-3 flex items-center gap-3 rounded-md border border-yellow-200/40 bg-cyan-950/30 p-3">
                 <div className="relative h-14 w-14 shrink-0">
@@ -707,7 +721,7 @@ export default function SubsetSumPage() {
                 </div>
               </div>
               <div className="mt-3 rounded-md border border-cyan-100/30 bg-cyan-950/30 p-3 text-xs leading-5 text-cyan-50">
-                <p className="font-black">Calculo transparente</p>
+                <p className="font-black">Cálculo físico</p>
                 <p className="mt-1">
                   {balloonCount.toLocaleString("es-HN")} x [(densidad aire - densidad helio)
                   x volumen - {Math.round(materialWeightGrams).toLocaleString("es-HN")} g] ={" "}
@@ -721,8 +735,8 @@ export default function SubsetSumPage() {
                 <div>
                   <h2 className="text-lg font-black uppercase text-white">Resultados</h2>
                   <p className="mt-1 text-sm leading-6 text-cyan-50">
-                    Solo aparecen subconjuntos cuya elevacion total coincide exactamente con
-                    la meta, ordenados desde la menor cantidad de racimos.
+                    Solo aparecen subconjuntos cuya elevación total coincide exactamente con
+                    la meta, ordenados desde la menor cantidad de globos necesarios
                   </p>
                 </div>
                 <span className="rounded-md bg-yellow-300 px-2 py-1 text-xs font-black text-cyan-950">
@@ -733,11 +747,11 @@ export default function SubsetSumPage() {
               <div className="mt-4 max-h-80 space-y-3 overflow-y-auto pr-1">
                 {!hasEnoughLift ? (
                   <div className="rounded-md border border-yellow-200/60 bg-yellow-300/15 p-3 text-sm leading-5 text-yellow-50">
-                    <p className="font-black">Elevacion disponible insuficiente</p>
+                    <p className="font-black">Elevación disponible insuficiente</p>
                     <p className="mt-1">
-                      Todos los racimos suman {formatKg(availableLift)}. Agrega otro racimo o
-                      reduce la meta; mientras sea mayor, las combinaciones mas fuertes pueden
-                      repetirse aunque cambie el faltante.
+                      Todos los conjuntos suman {formatKg(availableLift)}. Agrega otro conjunto o
+                      reduce la meta; mientras sea mayor, las combinaciones más fuertes pueden
+                      repetirse aunque cambie el faltante
                     </p>
                   </div>
                 ) : null}
@@ -745,7 +759,7 @@ export default function SubsetSumPage() {
                   <div className="rounded-md border border-cyan-100/30 bg-cyan-950/28 p-4 text-center text-sm leading-6 text-cyan-50">
                     <p className="font-black text-white">Sin coincidencias exactas</p>
                     <p className="mt-1">
-                      Agrega racimos o cambia la meta hasta formar una suma exacta.
+                      Agrega conjuntos de globos o cambia la meta hasta formar una suma exacta
                     </p>
                   </div>
                 ) : null}
@@ -795,24 +809,23 @@ export default function SubsetSumPage() {
             </section>
 
             <section className="up-panel-card rounded-lg p-4">
-              <h2 className="text-lg font-black uppercase text-white">Fisica del globo</h2>
+              <h2 className="text-lg font-black uppercase text-white">Física del globo</h2>
               <p className="mt-2 text-sm leading-6 text-cyan-50">
-                Cada racimo usa: n x [({densidadAire} - {densidadHelio}) x{" "}
+                Cada conjunto usa: n x [({densidadAire} - {densidadHelio}) x{" "}
                 {volumenGlobo} - peso material].
               </p>
               <p className="mt-2 text-sm leading-6 text-cyan-50">
-                El peso del material es un buen factor variable: cambia por latex, plastico,
-                nudo, cinta o cuerda, y afecta directamente la elevacion neta sin complicar
-                demasiado el modelo.
+                El peso del material es el factor variable: cambia por látex, plástico,
+                nudo, cinta o cuerda, y afecta directamente la elevación neta.
               </p>
               <p className="mt-2 text-sm leading-6 text-cyan-50">
-                Con {Math.round(pesoGloboVacio * 1000).toLocaleString("es-HN")} g de
+                Con {Math.round(pesoGloboVacio * 1000).toLocaleString("es-HN")}g de
                 material, cada globo aporta cerca de{" "}
-                <strong>{Math.round(liftTtlGloboKG * 1000).toLocaleString("es-HN")} g</strong>.
+                <strong>{Math.round(liftTtlGloboKG * 1000).toLocaleString("es-HN")}g</strong>.
               </p>
               <p className="mt-2 text-sm font-black text-yellow-100">
                 El algoritmo conserva una esencia propia: busca solamente sumas exactas y
-                ordena las soluciones por la menor cantidad de racimos.
+                ordena las soluciones por la menor cantidad de conjuntos
               </p>
             </section>
           </div>
@@ -825,28 +838,30 @@ export default function SubsetSumPage() {
           <div className="relative flex w-full max-w-4xl items-end justify-center">
             <div className="relative max-w-3xl rounded-[28px] border-2 border-cyan-200/80 bg-white/92 p-6 text-cyan-950 shadow-[0_0_36px_rgba(103,232,249,0.55)] backdrop-blur sm:p-8">
               <p className="text-sm font-black uppercase tracking-[0.18em] text-fuchsia-700">
-                Mision de despegue
+                Mision: Llevar a Carl a Paradise Falls
               </p>
               <h2 className="mt-2 text-3xl font-black leading-tight text-cyan-950 sm:text-4xl">
-                Necesitamos levantar la casa con la menor cantidad de racimos.
+                Necesitamos levantar la casa con la menor cantidad de globos
               </h2>
               <p className="mt-4 text-base font-semibold leading-7 text-cyan-900">
-                La meta inicial usa como referencia los 258,000 kg de la casa de Up. Cada
-                racimo se calcula siempre con la formula fisica, usando la cantidad de globos y
-                el peso del material que elijas. El simulador ordena las combinaciones desde la
-                que usa menos racimos hasta las que usan mas.
+                Ayudemos a Carl a elevar su casa usando conjuntos de globos. Cada conjunto aporta 
+                una elevación neta calculada con la fórmula física del teorema de  Arquimedes, 
+                y el reto es encontrar combinaciones que coincidan exactamente con el objetivo
+                de elevación. Ese objetivo se calcula un 5% por encima del peso de la casa, para
+                que la fuerza no solo la equilibre, sino que permita elevarla.
               </p>
               <p className="mt-3 text-sm leading-6 text-cyan-900/90">
-                Para que los racimos no sean identicos, el peso del material cambia la
-                elevacion final: un globo mas pesado aporta menos fuerza neta, aunque tenga el
-                mismo volumen de helio.
+                Irás agregando conjuntos de globos, cada conjunto con un peso del material 
+                a tu elección. 
+                La lógica es que cuanto mas pesado sea el material, menos fuerza neta 
+                aportará el conjunto de globos,aunque tenga el mismo volumen de helio.
               </p>
               <button
                 type="button"
                 onClick={() => setShowContext(false)}
                 className="mt-6 rounded-md bg-yellow-300 px-5 py-3 text-sm font-black uppercase text-cyan-950 shadow-lg transition hover:bg-yellow-200"
               >
-                Iniciar simulador
+                Iniciar
               </button>
             </div>
           </div>

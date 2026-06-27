@@ -5,6 +5,12 @@ export const densidadHelio = 0.1785;
 export const volumenGlobo = 0.014; //Use estos valores solo como estandar, siendo el r=0.15m
 export const pesoGloboVacio = 0.003; //aproximadamenete un globo de latex tiene un peso de 3g
 export const pesoCasaKG = 258000; //valor aproximado que halle en internet
+export const margenSeguridadElevacion = 0.05;
+
+export function calcularMetaElevacion(pesoCasa: number): number {
+  const pesoSeguro = Math.max(0, Number.isFinite(pesoCasa) ? pesoCasa : 0);
+  return Math.ceil(pesoSeguro * (1 + margenSeguridadElevacion));
+}
 
 export const liftTtlGloboKG =
   (densidadAire - densidadHelio) * volumenGlobo -
